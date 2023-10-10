@@ -4,7 +4,7 @@ const app = express()
 const port = process.env.port || 3000
 
 const addresses = [{title: "Voronovda 11"}, {title: "Karla-Marksa 89"}]
-const products = [{title: "Tomato"}, {title: "Orange"}]
+const products = [{title: "tomato"}, {title: "orange"}]
 
 app.get('/', (req: Request, res: Response) => {
     let hw = 'w';
@@ -13,8 +13,16 @@ app.get('/', (req: Request, res: Response) => {
 
 app.get('/products/:productTitle', (req: Request, res: Response) => {
 
-    const params = req.params.productTitle
-    res.send(products)
+    const productTitle = req.params.productTitle
+
+    const product = products.find(el=>el.title === productTitle)
+
+    if(product){
+        res.send(product)
+
+    } else {
+        res.send(404)
+    }
 })
 
 
