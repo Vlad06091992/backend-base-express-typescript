@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import {HTTP_STATUSES} from "../http_statuses/http_statuses";
-import {app, db} from "../index";
+import {db} from '../db'
 
 
 export const usersRouter = Router({})
