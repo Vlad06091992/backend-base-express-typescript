@@ -1,26 +1,18 @@
-import express, {Response, Request} from 'express'
+import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
-import {CourseType, RootDBType} from "./types"
+import {RootDBType} from "./types"
+import {coursesRouter} from "./routes/coursesRouter";
+import {usersRouter} from "./routes/users.router";
 
-type UserType = {
-
-}
 
 export const app = express()
 app.use(bodyParser())
 const port = process.env.port || 3000
 
-export const HTTP_STATUSES = {
-    OK_200: 200,
-    CREATED_201: 201,
-    NO_CONTENT_204: 204,
-
-    BAD_REQUEST_400: 400,
-    NOT_FOUND_404: 404,
-}
 
 
-const db:RootDBType = {
+
+export const db:RootDBType = {
     courses:
         [
             {id: 1, title: 'front-end',studentsCount:10},
@@ -37,98 +29,11 @@ const db:RootDBType = {
         ]
 }
 
-
-app.get('/courses', (req: Request, res: Response) => {
-    res.status(200).send(db.courses)
-})
-
-app.get('/courses/:id', (req: Request, res: Response) => {
-    const id = req.params.id
-    const course = db.courses.find((el:CourseType) => el.id === +id)
-    if (course) {
-        res.send(course)
-
-    } else {
-        res.send(HTTP_STATUSES.NOT_FOUND_404)
-    }
-})
-
-app.post('/courses', (req: Request, res: Response) => {
-    let title = req.body.title
-    if (title) {
-        const course = {id: +new Date(),title,studentsCount:0 }
-        db.courses.push(course)
-        res.status(HTTP_STATUSES.CREATED_201).send(course)
-    } else {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
-    }
-})
+app.use('/courses', coursesRouter)
+app.use('/users', usersRouter)
 
 
-app.put('/courses/:id', (req: Request, res: Response) => {
-    const id = req.params.id
 
-    const course = db.courses.find(el => el.id === +id)
-    if (course) {
-        course.title = req.body.title
-        res.status(HTTP_STATUSES.CREATED_201).send(course)
-    } else {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
-    }
-})
-
-
-app.delete('/courses/:id', (req: Request, res: Response) => {
-    const id = req.params.id
-    const indexItem = db.courses.findIndex(el => el.id === +id)
-
-    if (indexItem > -1) {
-        db.courses.splice(indexItem, 1)
-        res.send(HTTP_STATUSES.NO_CONTENT_204)
-    } else {
-        res.send(HTTP_STATUSES.NOT_FOUND_404)
-    }
-})
-app.get('/users', (req: Request, res: Response) => {
-    const title = req.query.title
-    if (title) {
-        if (typeof title === "string") {
-            res.send(db.users.filter(el => el.userName.toLowerCase().indexOf(title) > -1))
-        }
-    }
-    res.send(db.users)
-})
-
-app.post('/users', (req: Request, res: Response) => {
-    const userName = req.body.title
-    res.send(userName)
-})
-
-
-app.get('/users/:id', (req: Request, res: Response) => {
-    const id = req.params.id
-    const user = db.users.find(el => el.id === +id)
-    if (user) {
-        res.send(user)
-
-    } else {
-        res.send(HTTP_STATUSES.NOT_FOUND_404)
-    }
-})
-
-app.delete('/users/:id', (req: Request, res: Response) => {
-    const id = req.params.id
-    const indexItem = db.users.findIndex(el => el.id === +id)
-
-    if (indexItem > -1) {
-        db.users.splice(indexItem, 1)
-        res.send(HTTP_STATUSES.NO_CONTENT_204)
-    } else {
-        res.send(HTTP_STATUSES.NOT_FOUND_404)
-    }
-})
-
-console.log(new Date(2022,10,1))
 
 
 
