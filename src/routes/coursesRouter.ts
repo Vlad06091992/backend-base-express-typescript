@@ -37,6 +37,7 @@ coursesRouter.put('/:id', (req: Request, res: Response) => {
     const course = db.courses.find((el:CourseType) => el.id === +id)
     if (course) {
         course.title = req.body.title
+        course.studentsCount = req.body.studentsCount
         res.status(HTTP_STATUSES.CREATED_201).send(course)
     } else {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)

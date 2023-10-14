@@ -1,5 +1,6 @@
 import request from "supertest";
-import {app, HTTP_STATUSES} from "../../src";
+import {app} from "../../src/index";
+import {HTTP_STATUSES} from "../../src/http_statuses/http_statuses";
 
 
 describe('/courses', () => {
@@ -39,9 +40,9 @@ describe('/courses', () => {
     it('should added new course(vue)', async () => {
         const createResponse = await request(app)
             .post('/courses')
-            .send({title: 'vue'})
+            .send({title: 'vue',studentsCount:0})
         expect(HTTP_STATUSES.CREATED_201)
-        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'vue'})
+        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'vue',studentsCount:0})
 
         createdCourse1 = createResponse.body
         await request(app).get('/courses').expect(HTTP_STATUSES.OK_200, [createdCourse1])
@@ -57,9 +58,9 @@ describe('/courses', () => {
     it('course should be updated', async () => {
         const createResponse = await request(app)
             .put(`/courses/${createdCourse1.id}`)
-            .send({title: 'vue composition API'})
+            .send({title: 'vue composition API',studentsCount:3})
         expect(HTTP_STATUSES.CREATED_201)
-        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'vue composition API'})
+        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'vue composition API',studentsCount:3})
     })
 
 
@@ -68,9 +69,9 @@ describe('/courses', () => {
     it('should added new course(angular)', async () => {
         const createResponse = await request(app)
             .post('/courses')
-            .send({title: 'angular'})
+            .send({title: 'angular',studentsCount:0})
         expect(HTTP_STATUSES.CREATED_201)
-        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'angular'})
+        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'angular',studentsCount:0})
 
         createdCourse2 = createResponse.body
 
@@ -83,9 +84,9 @@ describe('/courses', () => {
     it('course should be updated', async () => {
         const createResponse = await request(app)
             .put(`/courses/${createdCourse2.id}`)
-            .send({title: 'ANGULAR!!!'})
+            .send({title: 'ANGULAR!!!',studentsCount:0})
         expect(HTTP_STATUSES.CREATED_201)
-        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'ANGULAR!!!'})
+        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'ANGULAR!!!',studentsCount:0})
     })
 
     it('all courses should be deleted', async () => {
