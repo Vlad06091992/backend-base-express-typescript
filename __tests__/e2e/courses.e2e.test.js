@@ -63,13 +63,35 @@ describe('/courses', () => {
         expect(createResponse.body).toEqual({ id: expect.any(Number), title: 'vue composition API' });
     }));
     let createdCourse2 = null;
-    it('should added new course(vue)', () => __awaiter(void 0, void 0, void 0, function* () {
+    it('should added new course(angular)', () => __awaiter(void 0, void 0, void 0, function* () {
         const createResponse = yield (0, supertest_1.default)(src_1.app)
             .post('/courses')
             .send({ title: 'angular' });
         expect(src_1.HTTP_STATUSES.CREATED_201);
-        expect(createResponse.body).toEqual({ id: expect.any(Number), title: 'vue' });
+        expect(createResponse.body).toEqual({ id: expect.any(Number), title: 'angular' });
+        createdCourse2 = createResponse.body;
         const coursesResponse = yield (0, supertest_1.default)(src_1.app).get('/courses');
-        expect(coursesResponse.body.courses.length).toBe(2);
+        expect(coursesResponse.body.length).toBe(2);
+    }));
+    it('course should be updated', () => __awaiter(void 0, void 0, void 0, function* () {
+        const createResponse = yield (0, supertest_1.default)(src_1.app)
+            .put(`/courses/${createdCourse2.id}`)
+            .send({ title: 'ANGULAR!!!' });
+        expect(src_1.HTTP_STATUSES.CREATED_201);
+        expect(createResponse.body).toEqual({ id: expect.any(Number), title: 'ANGULAR!!!' });
+    }));
+    it('all courses should be deleted', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(src_1.app)
+            .delete(`/courses/${createdCourse1.id}`)
+            .expect(src_1.HTTP_STATUSES.NO_CONTENT_204);
+        yield (0, supertest_1.default)(src_1.app)
+            .get(`/courses/${createdCourse1.id}`)
+            .expect(src_1.HTTP_STATUSES.NOT_FOUND_404);
+        yield (0, supertest_1.default)(src_1.app)
+            .delete(`/courses/${createdCourse2.id}`)
+            .expect(src_1.HTTP_STATUSES.NO_CONTENT_204);
+        yield (0, supertest_1.default)(src_1.app)
+            .get(`/courses`)
+            .expect(src_1.HTTP_STATUSES.OK_200, []);
     }));
 });

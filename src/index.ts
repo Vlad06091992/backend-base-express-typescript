@@ -1,5 +1,10 @@
 import express, {Response, Request} from 'express'
 import bodyParser from "body-parser";
+import {CourseType, RootDBType} from "./types"
+
+type UserType = {
+
+}
 
 export const app = express()
 app.use(bodyParser())
@@ -15,16 +20,21 @@ export const HTTP_STATUSES = {
 }
 
 
-
-
-const db = {
-    courses: [{id: 1, title: 'front-end'}, {id: 2, title: 'back-end'}, {id: 3, title: 'automation qa'}, {
-        id: 4,
-        title: 'devops'
-    }],
-    addresses : [{id: 1, title: "Voronovda 11"}, {id: 2, title: "Karla-Marksa 89"}],
-    products : [{id: 1, title: "tomato"}, {id: 2, title: "orange"}, {id: 3, title: "arbuz"}]
-
+const db:RootDBType = {
+    courses:
+        [
+            {id: 1, title: 'front-end',studentsCount:10},
+            {id: 2, title: 'back-end',studentsCount:10},
+            {id: 3, title: 'automation qa',studentsCount:10},
+            {id: 4, title: 'devops',studentsCount:10}
+        ],
+    users: [{id: 1, userName: "Vlad"}, {id: 2, userName: "Daria"}],
+    studentsCourseBinding:
+        [
+            {studentId: 1, courseId: 1, date: new Date(2022,10,1)},
+            {studentId: 1, courseId: 2, date: new Date(2022,10,1)},
+            {studentId: 2, courseId: 2, date: new Date(2022,10,1)}
+        ]
 }
 
 
@@ -34,7 +44,7 @@ app.get('/courses', (req: Request, res: Response) => {
 
 app.get('/courses/:id', (req: Request, res: Response) => {
     const id = req.params.id
-    const course = db.courses.find(el => el.id === +id)
+    const course = db.courses.find((el:CourseType) => el.id === +id)
     if (course) {
         res.send(course)
 
@@ -45,13 +55,13 @@ app.get('/courses/:id', (req: Request, res: Response) => {
 
 app.post('/courses', (req: Request, res: Response) => {
     let title = req.body.title
-if(title){
-    const course = {id: +new Date(), title}
-    db.courses.push(course)
-    res.status(HTTP_STATUSES.CREATED_201).send(course)
-} else {
-    res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
-}
+    if (title) {
+        const course = {id: +new Date(),title,studentsCount:0 }
+        db.courses.push(course)
+        res.status(HTTP_STATUSES.CREATED_201).send(course)
+    } else {
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+    }
 })
 
 
@@ -79,96 +89,96 @@ app.delete('/courses/:id', (req: Request, res: Response) => {
         res.send(HTTP_STATUSES.NOT_FOUND_404)
     }
 })
-
-
-app.get('/products', (req: Request, res: Response) => {
-    let title = req.query.title
-
-    if (req.query.title) {
-        let searchString = req.query.title.toString()
-        let filteredProducts = db.products.filter(el => el.title.indexOf(searchString) > -1)
-        res.send(filteredProducts)
-    } else {
-        res.send(db.products)
-    }
-})
-app.post('/products', (req: Request, res: Response) => {
-    let title = req.body.title
-
-    const product = {id: +new Date(), title}
-    db.products.push(product)
-    res.status(HTTP_STATUSES.CREATED_201).send(product)
-
-})
-app.put('/products/:id', (req: Request, res: Response) => {
-    const id = req.params.id
-
-    const product = db.products.find(el => el.id === +id)
-    if (product) {
-        product.title = req.body.title
-        res.status(HTTP_STATUSES.CREATED_201).send(product)
-    }
-})
-
-app.get('/products/:productTitle', (req: Request, res: Response) => {
-    const productTitle = req.params.productTitle
-    const product = db.products.find(el => el.title === productTitle)
-
-    if (product) {
-        res.send(product)
-
-    } else {
-        res.send(HTTP_STATUSES.NOT_FOUND_404)
-    }
-})
-
-
-app.get('/addresses', (req: Request, res: Response) => {
+app.get('/users', (req: Request, res: Response) => {
     const title = req.query.title
     if (title) {
         if (typeof title === "string") {
-            res.send(db.addresses.filter(el => el.title.toLowerCase().indexOf(title) > -1))
+            res.send(db.users.filter(el => el.userName.toLowerCase().indexOf(title) > -1))
         }
     }
-    res.send(db.addresses)
+    res.send(db.users)
 })
 
-app.post('/addresses', (req: Request, res: Response) => {
-    console.log(req)
-    const title = req.body.title
-    res.send(title)
+app.post('/users', (req: Request, res: Response) => {
+    const userName = req.body.title
+    res.send(userName)
 })
 
 
-app.get('/addresses/:id', (req: Request, res: Response) => {
+app.get('/users/:id', (req: Request, res: Response) => {
     const id = req.params.id
-    const address = db.addresses.find(el => el.id === +id)
-    if (address) {
-        res.send(address)
+    const user = db.users.find(el => el.id === +id)
+    if (user) {
+        res.send(user)
 
     } else {
         res.send(HTTP_STATUSES.NOT_FOUND_404)
     }
 })
 
-app.delete('/addresses/:id', (req: Request, res: Response) => {
+app.delete('/users/:id', (req: Request, res: Response) => {
     const id = req.params.id
-    const indexItem = db.addresses.findIndex(el => el.id === +id)
+    const indexItem = db.users.findIndex(el => el.id === +id)
 
     if (indexItem > -1) {
-        db.addresses.splice(indexItem, 1)
+        db.users.splice(indexItem, 1)
         res.send(HTTP_STATUSES.NO_CONTENT_204)
     } else {
         res.send(HTTP_STATUSES.NOT_FOUND_404)
     }
 })
 
-app.delete("/__test__/data",(req:Request,res:Response)=>{
+console.log(new Date(2022,10,1))
+
+
+
+// app.get('/students', (req: Request, res: Response) => {
+//     let title = req.query.title
+//
+//     if (req.query.title) {
+//         let searchString = req.query.title.toString()
+//         let filteredStudents = db.studentsCourseBinding.filter(el => el.title.indexOf(searchString) > -1)
+//         res.send(filteredStudents)
+//     } else {
+//         res.send(db.studentsCourseBinding)
+//     }
+// })
+// app.post('/students', (req: Request, res: Response) => {
+//     let title = req.body.title
+//
+//     const student = {id: +new Date(), title}
+//     db.studentsCourseBinding.push(student)
+//     res.status(HTTP_STATUSES.CREATED_201).send(student)
+//
+// })
+// app.put('/students/:id', (req: Request, res: Response) => {
+//     const id = req.params.id
+//
+//     const student = db.studentsCourseBinding.find(el => el.id === +id)
+//     if (student) {
+//         student.title = req.body.title
+//         res.status(HTTP_STATUSES.CREATED_201).send(student)
+//     }
+// })
+//
+// app.get('/students/:productTitle', (req: Request, res: Response) => {
+//     const studentTitle = req.params.productTitle
+//     const student = db.studentsCourseBinding.find(el => el.title === studentTitle)
+//
+//     if (student) {
+//         res.send(student)
+//
+//     } else {
+//         res.send(HTTP_STATUSES.NOT_FOUND_404)
+//     }
+// })
+//
+
+app.delete("/__test__/data", (req: Request, res: Response) => {
     db.courses = []
     res.sendStatus(204)
 })
 
-
 app.listen(port, () => {
-     console.log(`Example app listening on port ${port}`)
+    console.log(`Example app listening on port ${port}`)
 })
