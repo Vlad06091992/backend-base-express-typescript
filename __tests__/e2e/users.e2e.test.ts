@@ -1,5 +1,5 @@
 import request from "supertest";
-import {app} from "../../src/index";
+import {app} from "../../src/setting";
 import {HTTP_STATUSES} from "../../src/http_statuses/http_statuses";
 
 
@@ -18,16 +18,20 @@ describe('test for /users', () => {
 
     it('should return 404 for not existing user', async () => {
         await request(app)
-            .get('/courses/333')
+            .get('/users/2222')
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     })
+
+
+    it('should not added new user without correct data', async () => {
+        await request(app)
+            .post('/users')
+            .send({title:''})
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
+    })
+
+
     //
-    // it('should not added new course without correct data', async () => {
-    //     await request(app)
-    //         .post('/courses')
-    //         .send({title: ''})
-    //     expect(HTTP_STATUSES.BAD_REQUEST_400)
-    // })
     //
     // it('should return status 200 and empty', async () => {
     //     await request(app)

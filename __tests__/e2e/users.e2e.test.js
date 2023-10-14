@@ -13,29 +13,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const index_1 = require("../../src/index");
+const setting_1 = require("../../src/setting");
 const http_statuses_1 = require("../../src/http_statuses/http_statuses");
 describe('test for /users', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(index_1.app).delete("/__test__/data");
+        yield (0, supertest_1.default)(setting_1.app).delete("/__test__/data");
     }));
     it('should return status 200 and empty', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(index_1.app)
+        yield (0, supertest_1.default)(setting_1.app)
             .get('/users')
             .expect(http_statuses_1.HTTP_STATUSES.OK_200, []);
     }));
     it('should return 404 for not existing user', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(index_1.app)
-            .get('/courses/333')
+        yield (0, supertest_1.default)(setting_1.app)
+            .get('/users/2222')
             .expect(http_statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
     //
-    // it('should not added new course without correct data', async () => {
-    //     await request(app)
-    //         .post('/courses')
-    //         .send({title: ''})
-    //     expect(HTTP_STATUSES.BAD_REQUEST_400)
-    // })
+    it('should not added new user without correct data', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(setting_1.app)
+            .post('/users')
+            .send({ title: 'cxvcvc' });
+        expect(http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
+    }));
     //
     // it('should return status 200 and empty', async () => {
     //     await request(app)

@@ -14,11 +14,6 @@ usersRouter.get('/', (req: Request, res: Response) => {
     }
     res.send(db.users)
 })
-usersRouter.post('/', (req: Request, res: Response) => {
-    const userName = req.body.title
-    res.send(userName)
-})
-
 
 usersRouter.get('/:id', (req: Request, res: Response) => {
     const id = req.params.id
@@ -30,6 +25,25 @@ usersRouter.get('/:id', (req: Request, res: Response) => {
         res.send(HTTP_STATUSES.NOT_FOUND_404)
     }
 })
+
+usersRouter.post('/', (req: Request, res: Response) => {
+    const userName = req.body.title
+    if (userName) {
+        const user = {
+            userName: req.body.title,
+            id: +new Date(),
+        }
+
+        db.users.push(user)
+        res.status(HTTP_STATUSES.CREATED_201).send(user)
+
+    } else {
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+    }
+})
+
+
+
 
 usersRouter.delete('/:id', (req: Request, res: Response) => {
     const id = req.params.id
