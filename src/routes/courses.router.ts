@@ -2,11 +2,11 @@ import {Request, Response, Router} from "express";
 import {CourseType, RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "../types";
 import {HTTP_STATUSES} from "../http_statuses/http_statuses";
 import {db} from '../db'
-import {CourseCreateModel} from "../models/CourseCreateModel";
-import {QueryCourseModel} from "../models/QueryCourseModel";
-import {CourseUpdateModel} from "../models/CourseUpdateModel";
-import {CourseViewModel} from "../models/CourseViewModel";
-import {URIParamsCourseIdModel} from "../models/URIParamsCourseIdModel";
+import {CourseCreateModel} from "../models/courses/CourseCreateModel";
+import {QueryCourseModel} from "../models/courses/QueryCourseModel";
+import {CourseUpdateModel} from "../models/courses/CourseUpdateModel";
+import {CourseViewModel} from "../models/courses/CourseViewModel";
+import {URIParamsCourseIdModel} from "../models/courses/URIParamsCourseIdModel";
 import {getCourseViewModel} from "../utils";
 
 export const coursesRouter = Router({})

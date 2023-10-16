@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {HTTP_STATUSES} from "../http_statuses/http_statuses";
 import {db} from '../db'
+import {UserType} from "../types";
 
 
 export const usersRouter = Router({})
@@ -37,6 +38,19 @@ usersRouter.post('/', (req: Request, res: Response) => {
         db.users.push(user)
         res.status(HTTP_STATUSES.CREATED_201).send(user)
 
+    } else {
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+    }
+})
+
+
+usersRouter.put('/:id', (req: Request,  res: Response) => {
+    const id = req.params.id
+
+    const user = db.users.find((el: UserType) => el.id === +id)
+    if (user) {
+        user.userName = req.body.title
+        res.status(HTTP_STATUSES.CREATED_201).send(user)
     } else {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
     }

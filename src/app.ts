@@ -1,4 +1,4 @@
-import {coursesRouter} from "./routes/coursesRouter";
+import {coursesRouter} from "./routes/courses.router";
 import {usersRouter} from "./routes/users.router";
 import express, {Request, Response} from "express";
 import {db} from "./db";
@@ -6,9 +6,15 @@ import bodyParser from "body-parser";
 
 export const app = express()
 
+export const Routes = {
+    __test__ : '__test__',
+    courses:'/courses',
+    users:'/users',
+}
+
 app.use(bodyParser())
-app.use('/courses', coursesRouter)
-app.use('/users', usersRouter)
+app.use(Routes.courses, coursesRouter)
+app.use(Routes.users, usersRouter)
 
 
 

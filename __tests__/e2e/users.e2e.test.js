@@ -29,13 +29,13 @@ describe('test for /users', () => {
             .get('/users/2222')
             .expect(http_statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
-    //
     it('should not added new user without correct data', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(setting_1.app)
             .post('/users')
-            .send({ title: 'cxvcvc' });
-        expect(http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
+            .send({ title: '' })
+            .expect(http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
     }));
+    //
     //
     // it('should return status 200 and empty', async () => {
     //     await request(app)
