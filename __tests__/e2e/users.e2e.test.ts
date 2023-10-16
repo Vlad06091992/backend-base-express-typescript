@@ -4,6 +4,7 @@ import {HTTP_STATUSES} from "../../src/http_statuses/http_statuses";
 import {UserType} from "../../src/types";
 import {UserCreateModel} from "../../src/features/users/model/UserCreateModel";
 import {UserUpdateModel} from "../../src/features/users/model/UserUpdateModel";
+import {userTestManager} from "./userTestManager";
 
 
 describe('test for /users', () => {
@@ -28,31 +29,35 @@ describe('test for /users', () => {
 
 
     it('should not added new entity without correct data', async () => {
+        const data = {userName: ''};
+        await userTestManager.createUser(data, HTTP_STATUSES.BAD_REQUEST_400)
+
         await request(app)
-            .post(Routes.users)
-            .send({userName: ''})
-            .expect(HTTP_STATUSES.BAD_REQUEST_400)
+            .get(Routes.users)
+        expect(HTTP_STATUSES.OK_200)
+        expect([])
+
     })
 
 
     it('should return status 200 and empty array', async () => {
         await request(app)
             .get(Routes.users)
-            .expect(HTTP_STATUSES.OK_200, [])
+            .expect(HTTP_STATUSES.OK_200)
+            .expect([])
     })
 
     let createdUser1: UserType | null = null
 
     it('should added new user(Kolya)', async () => {
         const data: UserCreateModel = {userName: 'Kolya'};
-        const createResponse = await request(app)
-            .post(Routes.users)
-            .send(data)
-        expect(HTTP_STATUSES.CREATED_201)
-        expect(createResponse.body).toEqual({id: expect.any(Number), userName: data.userName})
+        const {response,createdEntity} = await userTestManager.createUser(data)
+        createdUser1 = createdEntity
 
-        createdUser1 = createResponse.body
-        await request(app).get(Routes.users).expect(HTTP_STATUSES.OK_200, [createdUser1])
+        expect(createdUser1).toEqual({id: expect.any(Number), userName: data.userName})
+        await request(app).get(Routes.users)
+            .expect(HTTP_STATUSES.OK_200)
+            .expect( [createdUser1])
     })
 
     it("Should return a found entity by ID", async () => {
@@ -96,27 +101,15 @@ describe('test for /users', () => {
 
     it('should added new user(Maxim)', async () => {
         const data: UserCreateModel = {userName: 'Maxim'};
-        const createResponse = await request(app)
-            .post(Routes.users)
-            .send(data)
-        expect(HTTP_STATUSES.CREATED_201)
-        expect(createResponse.body).toEqual({id: expect.any(Number), userName: data.userName})
+        const {response,createdEntity} = await userTestManager.createUser(data)
+        createdUser2 = createdEntity
 
-        createdUser2 = createResponse.body
+        expect(HTTP_STATUSES.CREATED_201)
+        expect(createdUser2).toEqual({id: expect.any(Number), userName: data.userName})
+
         const coursesResponse = await request(app).get(Routes.users)
         expect(coursesResponse.body.length).toBe(2)
     })
-
-    // it('entity should be updated', async () => {
-    //     if (createdUser2) {
-    //         const data:UserUpdateModel = {userName:"MAXIM" };
-    //         const createResponse = await request(app)
-    //             .put(`${Routes.users}/${createdUser2.id}`)
-    //             .send(data)
-    //         expect(HTTP_STATUSES.CREATED_201)
-    //         // expect(createResponse.body).toEqual({id: expect.any(Number), userName:data.userName })
-    //     }
-    // })
 
 
     it('entity should be updated', async () => {

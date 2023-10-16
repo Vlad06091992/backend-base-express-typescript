@@ -8,7 +8,6 @@ import {
     RootDBType
 } from "../../types";
 import {HTTP_STATUSES} from "../../../src/http_statuses/http_statuses";
-import {db} from '../../../src/db'
 import {CourseCreateModel} from "../courses/model/CourseCreateModel";
 import {QueryCourseModel} from "../courses/model/QueryCourseModel";
 import {CourseUpdateModel} from "../courses/model/CourseUpdateModel";

@@ -10,6 +10,7 @@ export const Routes = {
     __test__ : '/__test__',
     courses:'/courses',
     users:'/users',
+    usersCoursesBindings:'/users-courses-bindings',
 }
 
 app.use(bodyParser())

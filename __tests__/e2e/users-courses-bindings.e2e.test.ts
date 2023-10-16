@@ -6,7 +6,7 @@ import {CourseUpdateModel} from "../../src/features/courses/model/CourseUpdateMo
 import {courseTestManager} from "./courseTestManager";
 
 
-describe('test for /courses', () => {
+describe('test for /users-courses-bindings', () => {
 
     beforeAll(async () => {
         await request(app).delete(`${Routes.__test__}/data`)
