@@ -1,4 +1,4 @@
 export type UserViewModel =  {
     id: number;
-    UserName: string;
+    userName: string;
 }

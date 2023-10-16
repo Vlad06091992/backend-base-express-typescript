@@ -1,14 +1,14 @@
 import request from "supertest";
 import {app, Routes} from "../../src/app";
 import {HTTP_STATUSES} from "../../src/http_statuses/http_statuses";
-import {CourseCreateModel} from "../../src/models/courses/CourseCreateModel";
-import {CourseUpdateModel} from "../../src/models/courses/CourseUpdateModel";
+import {CourseCreateModel} from "../../src/features/courses/model/CourseCreateModel";
+import {CourseUpdateModel} from "../../src/features/courses/model/CourseUpdateModel";
 
 
 describe('test for /courses', () => {
 
     beforeAll(async () => {
-        await request(app).delete("/__test__/data")
+        await request(app).delete(`${Routes.__test__}/data`)
     })
 
     it('should return status 200 and empty', async () => {
@@ -49,6 +49,12 @@ describe('test for /courses', () => {
 
         createdCourse1 = createResponse.body
         await request(app).get(Routes.courses).expect(HTTP_STATUSES.OK_200, [createdCourse1])
+    })
+
+    it("Should return a found entity by ID", async()=>{
+        const createResponse = await request(app)
+            .get(`${Routes.courses}/${createdCourse1.id}`)
+        expect(createResponse.body.title).toBe('vue')
     })
 
     it('should not updated new course with incorrect data', async () => {

@@ -1,7 +1,7 @@
 export type UserCreateModel = {
 
     /**
-     * title of existing course
+     * name of existing user
      */
     userName: string,
     // /**
