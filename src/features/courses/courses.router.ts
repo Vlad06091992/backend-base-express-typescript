@@ -15,7 +15,6 @@ import {CourseViewModel} from "../courses/model/CourseViewModel";
 import {URIParamsCourseIdModel} from "../courses/model//URIParamsCourseIdModel";
 import {getCourseViewModel} from "../../utils";
 
-export const coursesRouter = Router({})
 export const getCoursesRouter = (db:RootDBType) => {
     const router = express.Router()
 

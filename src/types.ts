@@ -11,16 +11,17 @@ export type UserType = {
     userName: string;
 }
 
-export type StudentsCourseBindingType = {
-    studentId: number;
+export type UsersCourseBindingType = {
+    userId: number;
     courseId: number;
     date: Date;
+
 }
 
 export type RootDBType = {
     courses: CourseType[];
     users: UserType[];
-    studentsCourseBinding: StudentsCourseBindingType[];
+    usersCoursesBinding: UsersCourseBindingType[];
 }
 export type RequestWithQuery<T> = Request<{}, {}, {}, T>
 export type RequestWithBody<T> = Request<{}, {}, T, {}>

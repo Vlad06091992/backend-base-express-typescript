@@ -1,6 +1,6 @@
 import request from "supertest";
 import {app, Routes} from "../../src/app";
-import {UserCreateModel} from "../../src/features/users/model/UserCreateModel";
+import {UserCreateModel} from "../../src/features/users/model/UserCreateModel"
 import {HTTP_STATUSES, HTTPStatusType} from "../../src/http_statuses/http_statuses";
 
 export const userTestManager = {

@@ -4,7 +4,7 @@ import {HTTP_STATUSES} from "../../src/http_statuses/http_statuses";
 import {UserType} from "../../src/types";
 import {UserCreateModel} from "../../src/features/users/model/UserCreateModel";
 import {UserUpdateModel} from "../../src/features/users/model/UserUpdateModel";
-import {userTestManager} from "./userTestManager";
+import {userTestManager} from "../utils/userTestManager";
 
 
 describe('test for /users', () => {

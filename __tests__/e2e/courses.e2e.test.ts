@@ -3,7 +3,7 @@ import {app, Routes} from "../../src/app";
 import {HTTP_STATUSES} from "../../src/http_statuses/http_statuses";
 import {CourseCreateModel} from "../../src/features/courses/model/CourseCreateModel";
 import {CourseUpdateModel} from "../../src/features/courses/model/CourseUpdateModel";
-import {courseTestManager} from "./courseTestManager";
+import {courseTestManager} from "../utils/courseTestManager";
 
 
 describe('test for /courses', () => {

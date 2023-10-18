@@ -15,9 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = require("../../src/app");
 const http_statuses_1 = require("../../src/http_statuses/http_statuses");
+const courseTestManager_1 = require("../utils/courseTestManager");
 describe('test for /courses', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(app_1.app).delete("/__test__/data");
+        yield (0, supertest_1.default)(app_1.app).delete(`${app_1.Routes.__test__}/data`);
     }));
     it('should return status 200 and empty', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
@@ -30,10 +31,8 @@ describe('test for /courses', () => {
             .expect(http_statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
     it('should not added new course without correct data', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(app_1.app)
-            .post(app_1.Routes.courses)
-            .send({ title: '' });
-        expect(http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
+        const data = { title: '', studentsCount: 0 };
+        const { response, createdEntity } = yield courseTestManager_1.courseTestManager.createCourse(data, http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
     }));
     it('should return status 200 and empty', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
@@ -43,18 +42,14 @@ describe('test for /courses', () => {
     let createdCourse1 = null;
     it('should added new course(vue)', () => __awaiter(void 0, void 0, void 0, function* () {
         const data = { title: 'vue', studentsCount: 0 };
-        const createResponse = yield (0, supertest_1.default)(app_1.app)
-            .post(app_1.Routes.courses)
-            .send(data);
-        expect(http_statuses_1.HTTP_STATUSES.CREATED_201);
-        expect(createResponse.body).toEqual({ id: expect.any(Number), title: 'vue' });
-        createdCourse1 = createResponse.body;
+        const { response, createdEntity } = yield courseTestManager_1.courseTestManager.createCourse(data);
+        createdCourse1 = createdEntity;
         yield (0, supertest_1.default)(app_1.app).get(app_1.Routes.courses).expect(http_statuses_1.HTTP_STATUSES.OK_200, [createdCourse1]);
     }));
     it("Should return a found entity by ID", () => __awaiter(void 0, void 0, void 0, function* () {
         const createResponse = yield (0, supertest_1.default)(app_1.app)
             .get(`${app_1.Routes.courses}/${createdCourse1.id}`);
-        expect(createResponse.body.title).toBe('Vue');
+        expect(createResponse.body.title).toBe('vue');
     }));
     it('should not updated new course with incorrect data', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
@@ -73,13 +68,9 @@ describe('test for /courses', () => {
     let createdCourse2 = null;
     it('should added new course(angular)', () => __awaiter(void 0, void 0, void 0, function* () {
         const data = { title: 'angular', studentsCount: 0 };
-        const createResponse = yield (0, supertest_1.default)(app_1.app)
-            .post(app_1.Routes.courses)
-            .send(data);
-        expect(http_statuses_1.HTTP_STATUSES.CREATED_201);
-        expect(createResponse.body).toEqual({ id: expect.any(Number), title: 'angular' });
-        createdCourse2 = createResponse.body;
-        const coursesResponse = yield (0, supertest_1.default)(app_1.app).get('/courses');
+        const { response, createdEntity } = yield courseTestManager_1.courseTestManager.createCourse(data);
+        createdCourse2 = createdEntity;
+        const coursesResponse = yield (0, supertest_1.default)(app_1.app).get(app_1.Routes.courses);
         expect(coursesResponse.body.length).toBe(2);
     }));
     it('course should be updated', () => __awaiter(void 0, void 0, void 0, function* () {
