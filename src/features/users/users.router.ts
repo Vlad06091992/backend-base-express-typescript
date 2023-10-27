@@ -1,6 +1,5 @@
-import express, {Request, Response, Router} from "express";
-import {HTTP_STATUSES} from "../../../src/http_statuses/http_statuses";
-import {db} from '../../../src/db'
+import express, {Response} from "express";
+import {HTTP_STATUSES} from "../../http_statuses/http_statuses";
 import {
     RequestWithBody,
     RequestWithParams,

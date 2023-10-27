@@ -1,12 +1,12 @@
 import express, {Request, Response, Router} from "express";
 import {CourseType, RequestWithBody, RootDBType, UsersCourseBindingType, UserType} from "../../types";
-import {HTTP_STATUSES} from "../../../src/http_statuses/http_statuses";
+import {HTTP_STATUSES} from "../../http_statuses/http_statuses";
 import {
     UserCourseBindingsCreateModel
-} from "../../../src/features/users-courses-bindings/model/UserCourseBindingsCreateModel";
+} from "../users-courses-bindings/model/UserCourseBindingsCreateModel";
 import {
     UserCourseBindingsViewModel
-} from "../../../src/features/users-courses-bindings/model/UserCourseBindingsViewModel";
+} from "../users-courses-bindings/model/UserCourseBindingsViewModel";
 
 const mapEntityToViewModel = (entity: UsersCourseBindingType, user: UserType, course: CourseType): UserCourseBindingsViewModel => {
     return {userId:entity.userId,courseId:entity.courseId, courseTitle: course.title, userName: user.userName}

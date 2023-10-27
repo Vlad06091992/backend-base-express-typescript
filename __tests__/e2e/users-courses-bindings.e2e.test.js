@@ -16,6 +16,8 @@ const supertest_1 = __importDefault(require("supertest"));
 const app_1 = require("../../src/app");
 const http_statuses_1 = require("../../src/http_statuses/http_statuses");
 const usersCoursesBindingsTestManager_1 = require("../utils/usersCoursesBindingsTestManager");
+const userTestManager_1 = require("../utils/userTestManager");
+const courseTestManager_1 = require("../utils/courseTestManager");
 describe('test for /users-courses-bindings', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app).delete(`${app_1.Routes.__test__}/data`);
@@ -26,8 +28,18 @@ describe('test for /users-courses-bindings', () => {
             .expect(http_statuses_1.HTTP_STATUSES.OK_200, []);
     }));
     it('should created entity with correct data', () => __awaiter(void 0, void 0, void 0, function* () {
-        const data = { courseId: 10, userId: 10 };
-        const { response, createdEntity } = yield usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data);
+        const createdUserResult = yield userTestManager_1.userTestManager.createUser({ userName: 'valera' });
+        const createdCourseResult = yield courseTestManager_1.courseTestManager.createCourse({ title: 'vue', studentsCount: 0 });
+        const data = { courseId: createdCourseResult.createdEntity.id, userId: createdUserResult.createdEntity.id };
+        yield usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data);
+        const response = yield (0, supertest_1.default)(app_1.app).get(app_1.Routes.users).expect(http_statuses_1.HTTP_STATUSES.OK_200);
+    }));
+    it(`shouldn't created course binding because courseBinding already exists`, () => __awaiter(void 0, void 0, void 0, function* () {
+        const createdUserResult = yield userTestManager_1.userTestManager.createUser({ userName: 'valera' });
+        const createdCourseResult = yield courseTestManager_1.courseTestManager.createCourse({ title: 'vue', studentsCount: 0 });
+        const data = { courseId: createdCourseResult.createdEntity.id, userId: createdUserResult.createdEntity.id };
+        yield usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data);
+        yield usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data, http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
     }));
     // it('should return 404 for not existing course', async () => {
     //     await request(app)

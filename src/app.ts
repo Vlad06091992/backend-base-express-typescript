@@ -1,7 +1,7 @@
-import {getUsersCoursesBindingsRouter} from "../src/features/users-courses-bindings/users-courses-bindings.router"
+import {getUsersCoursesBindingsRouter} from "./features/users-courses-bindings/users-courses-bindings.router"
 
-import {getCoursesRouter} from "../src/features/courses/courses.router";
-import {getUsersRouter} from "../src/features/users/users.router";
+import {getCoursesRouter} from "./features/courses/courses.router";
+import {getUsersRouter} from "./features/users/users.router";
 import express, {Request, Response} from "express";
 import {db} from "./db";
 import bodyParser from "body-parser";
