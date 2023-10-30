@@ -5,6 +5,8 @@ import {getUsersRouter} from "./features/users/users.router";
 import express, {NextFunction, Request, Response} from "express";
 import {db} from "./db";
 import bodyParser from "body-parser";
+import {validationResult} from "express-validator";
+import {inputValidationMiddleware} from "./middlewares/input-validation-middleware";
 
 let countRequest = 0
 let blablaMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -12,6 +14,9 @@ let blablaMiddleware = (req: Request, res: Response, next: NextFunction) => {
     req.blabla = 'hello'
     next()
 };
+
+
+
 
 let authGuardMiddleware = (req: Request, res: Response, next: NextFunction) => {
     if (req.query.token === '123') {
@@ -38,9 +43,9 @@ export const Routes = {
 }
 
 app.use(bodyParser())
-app.use(blablaMiddleware)
-app.use(authGuardMiddleware)
-app.use(requestCountMiddleware)
+// app.use(inputValidationMiddleware)
+// app.use(authGuardMiddleware)
+// app.use(requestCountMiddleware)
 app.use(Routes.courses, getCoursesRouter(db))
 app.use(Routes.users, getUsersRouter(db))
 app.use(Routes.usersCoursesBindings, getUsersCoursesBindingsRouter(db))
