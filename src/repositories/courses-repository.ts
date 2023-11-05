@@ -3,7 +3,7 @@ import {getCourseViewModel} from "../utils";
 import {CourseType} from "../types";
 
 export const coursesRepository = {
-    findCourses(title: string | null) {
+    async findCourses(title: string | null) {
         let foundedCourses = db.courses
 
         if (title) {
@@ -11,19 +11,22 @@ export const coursesRepository = {
         }
         return foundedCourses.map(el => (getCourseViewModel(el)))
     },
-    createCourse(title: string) {
+    async createCourse(title: string): Promise<CourseType> {
         const course = {id: +new Date(), title, studentsCount: 0}
         db.courses.push(course)
+
         return course
+
+
     },
-    getCourseById(id: number) {
+    async getCourseById(id: number) {
         const course = db.courses.find((el: CourseType) => el.id === id)
         if (course) {
             return (getCourseViewModel(course))
 
         }
     },
-    updateCourse(body: { title: string, studentsCount: number }, id: number) {
+    async updateCourse(body: { title: string, studentsCount: number }, id: number) {
         const course = db.courses.find((el: CourseType) => el.id === +id)
         if (course) {
             course.title = body.title
@@ -33,7 +36,7 @@ export const coursesRepository = {
             return false
         }
     },
-    deleteCourse(id:number){
+    async deleteCourse(id: number) {
         const indexItem = db.courses.findIndex(el => el.id === +id)
         if (indexItem > -1) {
             db.courses.splice(indexItem, 1)
