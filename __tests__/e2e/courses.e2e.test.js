@@ -23,7 +23,7 @@ describe('test for /courses', () => {
     });
     it('should not added new course without correct data', async () => {
         const data = { title: '', studentsCount: 0 };
-        const { response, createdEntity } = await courseTestManager_1.courseTestManager.createCourse(data, http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
+        await courseTestManager_1.courseTestManager.createCourse(data, http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
     });
     it('should return status 200 and empty', async () => {
         await (0, supertest_1.default)(app_1.app)
@@ -34,7 +34,7 @@ describe('test for /courses', () => {
     it('should added new course(vue)', async () => {
         const data = { title: 'vue', studentsCount: 0 };
         const { response, createdEntity } = await courseTestManager_1.courseTestManager.createCourse(data);
-        debugger;
+        console.log(createdEntity);
         createdCourse1 = createdEntity;
         await (0, supertest_1.default)(app_1.app).get(app_1.Routes.courses).expect(http_statuses_1.HTTP_STATUSES.OK_200, [createdCourse1]);
     });
@@ -43,19 +43,21 @@ describe('test for /courses', () => {
             .get(`${app_1.Routes.courses}/${createdCourse1.id}`);
         expect(createResponse.body.title).toBe('vue');
     });
+    it('course should be updated', async () => {
+        const data = { title: 'vue 3', studentsCount: 0 };
+        const createResponse = await (0, supertest_1.default)(app_1.app)
+            .put(`${app_1.Routes.courses}/${createdCourse1.id}`)
+            .send(data)
+            .expect(204);
+        const responseWithNewCourse = await (0, supertest_1.default)(app_1.app)
+            .get(`${app_1.Routes.courses}/${createdCourse1.id}`);
+        expect(responseWithNewCourse.body.title).toBe('vue 3');
+    });
     it('should not updated new course with incorrect data', async () => {
         await (0, supertest_1.default)(app_1.app)
             .put(`${app_1.Routes.courses}/35`)
             .send({ title: 'newtitle' });
         expect(http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
-    });
-    it('course should be updated', async () => {
-        const data = { title: 'vue 3', studentsCount: 0 };
-        const createResponse = await (0, supertest_1.default)(app_1.app)
-            .put(`${app_1.Routes.courses}/${createdCourse1.id}`)
-            .send(data);
-        expect(http_statuses_1.HTTP_STATUSES.CREATED_201);
-        expect(createResponse.body).toEqual({ id: expect.any(Number), title: 'vue 3' });
     });
     let createdCourse2 = null;
     it('should added new course(angular)', async () => {
@@ -69,9 +71,11 @@ describe('test for /courses', () => {
         const data1 = { title: 'ANGULAR!!!', studentsCount: 0 };
         const createResponse = await (0, supertest_1.default)(app_1.app)
             .put(`${app_1.Routes.courses}/${createdCourse2.id}`)
-            .send(data1);
-        expect(http_statuses_1.HTTP_STATUSES.CREATED_201);
-        expect(createResponse.body).toEqual({ id: expect.any(Number), title: 'ANGULAR!!!' });
+            .send(data1)
+            .expect(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+        const responseWithNewCourse = await (0, supertest_1.default)(app_1.app)
+            .get(`${app_1.Routes.courses}/${createdCourse2.id}`);
+        expect(responseWithNewCourse.body.title).toBe('ANGULAR!!!');
     });
     it('all courses should be deleted', async () => {
         await (0, supertest_1.default)(app_1.app)

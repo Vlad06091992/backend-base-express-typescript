@@ -6,6 +6,6 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
     if (errors.isEmpty()) {
         next()
     } else {
-        res.send({errors: errors.array()});
+        res.status(400).send({errors: errors.array()});
     }
 };

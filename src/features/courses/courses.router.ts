@@ -39,7 +39,6 @@ export const getCoursesRouter = (db: RootDBType) => {
     router.post('/', titleValidation, inputValidationMiddleware, async (req: RequestWithBody<CourseCreateModel>, res: Response<CourseViewModel | number | any>) => {
         let data = req.body
         const course = await coursesRepository.createCourse(data) as any
-        debugger
         let out = getCourseViewModel(course)
         res.status(HTTP_STATUSES.CREATED_201).send(out)
     })
@@ -50,7 +49,7 @@ export const getCoursesRouter = (db: RootDBType) => {
         if (result.isEmpty()) {
             const isUpdated = await coursesRepository.updateCourse(req.body, +req.params.id) as any
             if (isUpdated) {
-                res.send(coursesRepository.getCourseById(+req.params.id))
+                res.sendStatus(204)
                 return
             } else {
                 res.sendStatus(404)

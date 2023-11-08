@@ -10,10 +10,9 @@ export const courseTestManager = {
         const response = await request(app)
             .post(Routes.courses)
             .send(data)
-        expect(expectedStatusCode)
+            .expect(expectedStatusCode)
 
         let createdEntity;
-debugger
         if (expectedStatusCode === HTTP_STATUSES.CREATED_201) {
             createdEntity = response.body
             expect(createdEntity).toEqual({
