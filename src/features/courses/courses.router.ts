@@ -23,7 +23,7 @@ const titleValidation = body('title').isLength({min: 3, max: 10}).withMessage('t
 export const getCoursesRouter = (db: RootDBType) => {
     const router = express.Router()
     router.get('/', async (req: RequestWithQuery<QueryCourseModel>, res: Response<CourseViewModel[]>) => {
-        let foundedCourses = await coursesRepository.findCourses(req.query.title)
+        let foundedCourses = await coursesRepository.findCourses(req.query.title) as any
         res.status(200).send(foundedCourses)
     })
 
@@ -36,69 +36,33 @@ export const getCoursesRouter = (db: RootDBType) => {
         }
     })
 
-    // router.post('/', (req: RequestWithBody<CourseCreateModel>, res: Response<CourseViewModel | number>) => {
-    //     let title = req.body.title
-    //     if (title) {
-    //         const course = coursesRepository.createCourse(title)
-    //         res.status(HTTP_STATUSES.CREATED_201).send(getCourseViewModel(course))
-    //     } else {
-    //         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
-    //     }
-    // })
-
     router.post('/', titleValidation, inputValidationMiddleware, async (req: RequestWithBody<CourseCreateModel>, res: Response<CourseViewModel | number | any>) => {
+        let data = req.body
+        const course = await coursesRepository.createCourse(data) as any
         debugger
-        let title = req.body.title
-        const course = await coursesRepository.createCourse(title)
-        res.status(HTTP_STATUSES.CREATED_201).send(getCourseViewModel(course))
-        // body('title').isLength({min: 3, max: 10})
-
-        // const result = validationResult(req);
-        // if (result.isEmpty()) {
-        //     const course = coursesRepository.createCourse(title)
-        //     res.status(HTTP_STATUSES.CREATED_201).send(getCourseViewModel(course))
-        // }
-
-        // res.send({errors: result.array()});
-
-
-        // if(!title.trim()){
-        //     res.sendStatus(400)
-        // }
-        // const course = coursesRepository.createCourse(title)
-        // res.status(HTTP_STATUSES.CREATED_201).send(getCourseViewModel(course))
+        let out = getCourseViewModel(course)
+        res.status(HTTP_STATUSES.CREATED_201).send(out)
     })
 
 
     router.put('/:id', titleValidation, async (req: RequestWithParamsAndBody<URIParamsCourseIdModel, CourseUpdateModel>, res: Response<CourseViewModel | any>) => {
-
         const result = validationResult(req);
         if (result.isEmpty()) {
-            const isUpdated = await coursesRepository.updateCourse(req.body, +req.params.id)
+            const isUpdated = await coursesRepository.updateCourse(req.body, +req.params.id) as any
             if (isUpdated) {
                 res.send(coursesRepository.getCourseById(+req.params.id))
+                return
             } else {
                 res.sendStatus(404)
+                return
             }
         }
         res.send({errors: result.array()});
-
-
     })
 
 
-    // router.put('/:id', (req: RequestWithParamsAndBody<URIParamsCourseIdModel, CourseUpdateModel>, res: Response<CourseViewModel>) => {
-    //     const isUpdated = coursesRepository.updateCourse(req.body, +req.params.id)
-    //     if (isUpdated) {
-    //         res.send(coursesRepository.getCourseById(+req.params.id))
-    //     } else {
-    //         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
-    //     }
-    // })
-
-
     router.delete('/:id', async (req: Request<URIParamsCourseIdModel>, res: Response<number>) => {
-        const isDeleted = await coursesRepository.deleteCourse(+req.params.id)
+        const isDeleted = await coursesRepository.deleteCourse(+req.params.id) as any
         if (isDeleted) {
             res.send(HTTP_STATUSES.NO_CONTENT_204)
         } else {

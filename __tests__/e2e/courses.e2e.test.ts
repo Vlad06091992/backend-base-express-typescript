@@ -41,6 +41,7 @@ describe('test for /courses', () => {
     it('should added new course(vue)', async () => {
         const data: CourseCreateModel = {title: 'vue', studentsCount: 0};
         const {response, createdEntity} = await courseTestManager.createCourse(data)
+debugger
         createdCourse1 = createdEntity
         await request(app).get(Routes.courses).expect(HTTP_STATUSES.OK_200, [createdCourse1])
     })
@@ -59,12 +60,12 @@ describe('test for /courses', () => {
     })
 
     it('course should be updated', async () => {
-        const data: CourseUpdateModel = {title: 'vue composition API', studentsCount: 0};
+        const data: CourseUpdateModel = {title: 'vue 3', studentsCount: 0};
         const createResponse = await request(app)
             .put(`${Routes.courses}/${createdCourse1.id}`)
             .send(data)
         expect(HTTP_STATUSES.CREATED_201)
-        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'vue composition API'})
+        expect(createResponse.body).toEqual({id: expect.any(Number), title: 'vue 3'})
     })
 
 

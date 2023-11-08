@@ -13,12 +13,13 @@ export const courseTestManager = {
         expect(expectedStatusCode)
 
         let createdEntity;
-
+debugger
         if (expectedStatusCode === HTTP_STATUSES.CREATED_201) {
             createdEntity = response.body
             expect(createdEntity).toEqual({
                 id: expect.any(Number),
-                title: data.title
+                title: data.title,
+                studentsCount: expect.any(Number),
             })
         }
 

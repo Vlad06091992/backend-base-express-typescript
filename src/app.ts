@@ -5,8 +5,7 @@ import {getUsersRouter} from "./features/users/users.router";
 import express, {NextFunction, Request, Response} from "express";
 import {db} from "./db";
 import bodyParser from "body-parser";
-import {validationResult} from "express-validator";
-import {inputValidationMiddleware} from "./middlewares/input-validation-middleware";
+import {coursesRepository} from "./repositories/courses-repository";
 
 let countRequest = 0
 let blablaMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -14,8 +13,6 @@ let blablaMiddleware = (req: Request, res: Response, next: NextFunction) => {
     req.blabla = 'hello'
     next()
 };
-
-
 
 
 let authGuardMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -54,25 +51,26 @@ app.use(Routes.usersCoursesBindings, getUsersCoursesBindingsRouter(db))
 app.get("/test", blablaMiddleware, (req: Request, res: Response) => {
     //@ts-ignore
     const blabla = req.blabla
-    res.send({value: blabla,reqCounter:countRequest})
+    res.send({value: blabla, reqCounter: countRequest})
 
 })
 
 app.get("/user", (req: Request, res: Response) => {
     //@ts-ignore
     const blabla = req.blabla
-    res.send({value: blabla + ' ' + 'from user',reqCounter:countRequest})
+    res.send({value: blabla + ' ' + 'from user', reqCounter: countRequest})
 })
 
 app.get('/counter', (req, res) => {
-    res.send({count:     countRequest})
+    res.send({count: countRequest})
 })
 
 
-app.delete("/__test__/data", (req: Request, res: Response) => {
+app.delete("/__test__/data", async (req: Request, res: Response) => {
     db.usersCoursesBinding = []
-    db.courses = []
+    // db.courses = []
     db.users = []
+    await coursesRepository.deleteAllCourses()
     res.sendStatus(204)
 })
 

@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -19,28 +10,28 @@ const usersCoursesBindingsTestManager_1 = require("../utils/usersCoursesBindings
 const userTestManager_1 = require("../utils/userTestManager");
 const courseTestManager_1 = require("../utils/courseTestManager");
 describe('test for /users-courses-bindings', () => {
-    beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(app_1.app).delete(`${app_1.Routes.__test__}/data`);
-    }));
-    it('should return status 200 and empty', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(app_1.app)
+    beforeAll(async () => {
+        await (0, supertest_1.default)(app_1.app).delete(`${app_1.Routes.__test__}/data`);
+    });
+    it('should return status 200 and empty', async () => {
+        await (0, supertest_1.default)(app_1.app)
             .get(app_1.Routes.usersCoursesBindings)
             .expect(http_statuses_1.HTTP_STATUSES.OK_200, []);
-    }));
-    it('should created entity with correct data', () => __awaiter(void 0, void 0, void 0, function* () {
-        const createdUserResult = yield userTestManager_1.userTestManager.createUser({ userName: 'valera' });
-        const createdCourseResult = yield courseTestManager_1.courseTestManager.createCourse({ title: 'vue', studentsCount: 0 });
+    });
+    it('should created entity with correct data', async () => {
+        const createdUserResult = await userTestManager_1.userTestManager.createUser({ userName: 'valera' });
+        const createdCourseResult = await courseTestManager_1.courseTestManager.createCourse({ title: 'vue', studentsCount: 0 });
         const data = { courseId: createdCourseResult.createdEntity.id, userId: createdUserResult.createdEntity.id };
-        yield usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data);
-        const response = yield (0, supertest_1.default)(app_1.app).get(app_1.Routes.users).expect(http_statuses_1.HTTP_STATUSES.OK_200);
-    }));
-    it(`shouldn't created course binding because courseBinding already exists`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const createdUserResult = yield userTestManager_1.userTestManager.createUser({ userName: 'valera' });
-        const createdCourseResult = yield courseTestManager_1.courseTestManager.createCourse({ title: 'vue', studentsCount: 0 });
+        await usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data);
+        const response = await (0, supertest_1.default)(app_1.app).get(app_1.Routes.users).expect(http_statuses_1.HTTP_STATUSES.OK_200);
+    });
+    it(`shouldn't created course binding because courseBinding already exists`, async () => {
+        const createdUserResult = await userTestManager_1.userTestManager.createUser({ userName: 'valera' });
+        const createdCourseResult = await courseTestManager_1.courseTestManager.createCourse({ title: 'vue', studentsCount: 0 });
         const data = { courseId: createdCourseResult.createdEntity.id, userId: createdUserResult.createdEntity.id };
-        yield usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data);
-        yield usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data, http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
-    }));
+        await usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data);
+        await usersCoursesBindingsTestManager_1.usersCoursesCreateTestManager.createBinding(data, http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
+    });
     // it('should return 404 for not existing course', async () => {
     //     await request(app)
     //         .get(`${Routes.courses}/333`)

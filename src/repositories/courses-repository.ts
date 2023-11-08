@@ -1,48 +1,46 @@
-import {db} from "../db";
 import {getCourseViewModel} from "../utils";
 import {CourseType} from "../types";
+import {client} from "../db-mongo";
+import {CourseCreateModel} from "../features/courses/model/CourseCreateModel";
+import {CourseViewModel} from "../features/courses/model/CourseViewModel";
 
 export const coursesRepository = {
     async findCourses(title: string | null) {
-        let foundedCourses = db.courses
-
         if (title) {
-            foundedCourses = foundedCourses.filter(el => el.title.indexOf(title) > -1)
+            let result = await client.db('institute').collection('courses').find({"title": {$regex: "title"}}).toArray()
+            return result.map((el:any) => getCourseViewModel(el))
         }
-        return foundedCourses.map(el => (getCourseViewModel(el)))
+        let result = await client.db('institute').collection('courses').find().toArray()
+        return result.map((el:any) => getCourseViewModel(el))
     },
-    async createCourse(title: string): Promise<CourseType> {
-        const course = {id: +new Date(), title, studentsCount: 0}
-        db.courses.push(course)
-
+    async createCourse({title, studentsCount}: CourseCreateModel): Promise<CourseType> {
+        const course = {id: +new Date(), title, studentsCount}
+        await client.db('institute').collection('courses').insertOne(course)
         return course
-
-
     },
     async getCourseById(id: number) {
-        const course = db.courses.find((el: CourseType) => el.id === id)
+        const course: CourseType | null = await client.db('institute').collection<CourseType>('courses').findOne({id})
         if (course) {
             return (getCourseViewModel(course))
+        }
+        return null
+    },
+    async updateCourse({title, studentsCount}: { title: string, studentsCount: number }, id: number) {
+        let result = await client.db('institute').collection('courses').updateOne({id}, {
+            $set: {
+                title,
+                studentsCount
+            }
+        })
+        return result.matchedCount === 1
+    },
 
-        }
-    },
-    async updateCourse(body: { title: string, studentsCount: number }, id: number) {
-        const course = db.courses.find((el: CourseType) => el.id === +id)
-        if (course) {
-            course.title = body.title
-            course.studentsCount = body.studentsCount
-            return true
-        } else {
-            return false
-        }
-    },
     async deleteCourse(id: number) {
-        const indexItem = db.courses.findIndex(el => el.id === +id)
-        if (indexItem > -1) {
-            db.courses.splice(indexItem, 1)
-            return true
-        } else {
-            return false
-        }
+        let result = await client.db('institute').collection('courses').deleteOne({id})
+        return result.deletedCount === 1
+    },
+    async deleteAllCourses() {
+        await client.db('institute').collection('courses').deleteMany({})
+        return true
     }
 }
