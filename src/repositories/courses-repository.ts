@@ -1,32 +1,34 @@
 import {getCourseViewModel} from "../utils";
 import {CourseType} from "../types";
-import {client} from "../db-mongo";
+import {client, productsCollection} from "../db-mongo";
 import {CourseCreateModel} from "../features/courses/model/CourseCreateModel";
-import {CourseViewModel} from "../features/courses/model/CourseViewModel";
+
+
+
 
 export const coursesRepository = {
     async findCourses(title: string | null) {
+        let filter = {}
         if (title) {
-            let result = await client.db('institute').collection('courses').find({"title": {$regex: "title"}}).toArray()
-            return result.map((el:any) => getCourseViewModel(el))
+            filter = {"title": {$regex: "title"}}
         }
-        let result = await client.db('institute').collection('courses').find().toArray()
-        return result.map((el:any) => getCourseViewModel(el))
+        let result = await productsCollection.find(filter).toArray()
+        return result.map((el: any) => getCourseViewModel(el))
     },
     async createCourse({title, studentsCount}: CourseCreateModel): Promise<CourseType> {
         const course = {id: +new Date(), title, studentsCount}
-        await client.db('institute').collection('courses').insertOne(course)
+        await productsCollection.insertOne(course)
         return course
     },
     async getCourseById(id: number) {
-        const course: CourseType | null = await client.db('institute').collection<CourseType>('courses').findOne({id})
+        const course: CourseType | null = await productsCollection.findOne({id})
         if (course) {
             return (getCourseViewModel(course))
         }
         return null
     },
     async updateCourse({title, studentsCount}: { title: string, studentsCount: number }, id: number) {
-        let result = await client.db('institute').collection('courses').updateOne({id}, {
+        let result = await productsCollection.updateOne({id}, {
             $set: {
                 title,
                 studentsCount
@@ -36,7 +38,7 @@ export const coursesRepository = {
     },
 
     async deleteCourse(id: number) {
-        let result = await client.db('institute').collection('courses').deleteOne({id})
+        let result = await productsCollection.deleteOne({id})
         return result.deletedCount === 1
     },
     async deleteAllCourses() {

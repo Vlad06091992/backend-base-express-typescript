@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 
 import {MongoClient} from 'mongodb'
+import {CourseType} from "./types";
 
 
 dotenv.config()
@@ -13,6 +14,9 @@ console.log(process.env.MONGO_URL)
 
 
 export const client = new MongoClient(mongoUri)
+
+const db = client.db('institute');
+export const productsCollection = db.collection<CourseType>('courses');
 
 export async function runDb() {
     try {
