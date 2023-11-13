@@ -9,6 +9,8 @@ dotenv.config()
 
 const URL= process.env.MONGO_URL
 
+console.log(URL)
+
 if(!URL){
     throw new Error("URL not found")
 }
