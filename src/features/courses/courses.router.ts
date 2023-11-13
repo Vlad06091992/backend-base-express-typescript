@@ -15,6 +15,7 @@ import {CourseViewModel} from "../courses/model/CourseViewModel";
 import {URIParamsCourseIdModel} from "../courses/model//URIParamsCourseIdModel";
 import {getCourseViewModel} from "../../utils";
 import {coursesRepository} from "../../repositories/courses-repository";
+// import {coursesRepository} from "../../repositories/courses-in-memory-repository";
 import {body, validationResult} from "express-validator";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 
@@ -38,7 +39,7 @@ export const getCoursesRouter = (db: RootDBType) => {
 
     router.post('/', titleValidation, inputValidationMiddleware, async (req: RequestWithBody<CourseCreateModel>, res: Response<CourseViewModel | number | any>) => {
         let data = req.body
-        const course = await coursesRepository.createCourse(data) as any
+        const course = await coursesRepository.createCourse(data)
         let out = getCourseViewModel(course)
         res.status(HTTP_STATUSES.CREATED_201).send(out)
     })

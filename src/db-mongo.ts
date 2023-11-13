@@ -7,8 +7,8 @@ import {CourseType} from "./types";
 dotenv.config()
 
 
-const mongoUri =  "mongodb://0.0.0.0:27017/?maxPoolSize=20&w=majority"
-// const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017/?maxPoolSize=20&w=majority"
+const mongoUri= "mongodb+srv://smirnovru92:ZPELzjX1CckwoEDw@cluster0.d3ysfam.mongodb.net/?retryWrites=true&w=majority"
+
 
 console.log(process.env.MONGO_URL)
 

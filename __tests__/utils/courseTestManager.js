@@ -7,7 +7,6 @@ exports.courseTestManager = void 0;
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = require("../../src/app");
 const http_statuses_1 = require("../../src/http_statuses/http_statuses");
-;
 exports.courseTestManager = {
     async createCourse(data, expectedStatusCode = http_statuses_1.HTTP_STATUSES.CREATED_201) {
         const response = await (0, supertest_1.default)(app_1.app)

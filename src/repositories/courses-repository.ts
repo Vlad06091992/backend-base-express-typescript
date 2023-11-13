@@ -3,9 +3,6 @@ import {CourseType} from "../types";
 import {client, productsCollection} from "../db-mongo";
 import {CourseCreateModel} from "../features/courses/model/CourseCreateModel";
 
-
-
-
 export const coursesRepository = {
     async findCourses(title: string | null) {
         let filter = {}

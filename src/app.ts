@@ -70,7 +70,7 @@ app.delete("/__test__/data", async (req: Request, res: Response) => {
     db.usersCoursesBinding = []
     // db.courses = []
     db.users = []
-    await coursesRepository.deleteAllCourses()
+    // await coursesRepository.deleteAllCourses()
     res.sendStatus(204)
 })
 
