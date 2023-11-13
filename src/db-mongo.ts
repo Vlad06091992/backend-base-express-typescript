@@ -15,7 +15,8 @@ if(!URL){
 
 export const client = new MongoClient(URL)
 
-const db = client.db('base-backend');
+// const db = client.db('base-backend');
+const db = client.db();
 export const productsCollection = db.collection<CourseType>('courses');
 
 export async function runDb() {
