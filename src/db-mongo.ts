@@ -7,15 +7,15 @@ import {CourseType} from "./types";
 dotenv.config()
 
 
-const mongoUri= "mongodb+srv://smirnovru92:ZPELzjX1CckwoEDw@cluster0.d3ysfam.mongodb.net/?retryWrites=true&w=majority"
+const URL= process.env.MONGO_URL
 
+if(!URL){
+    throw new Error("URL not found")
+}
 
-console.log(process.env.MONGO_URL)
+export const client = new MongoClient(URL)
 
-
-export const client = new MongoClient(mongoUri)
-
-const db = client.db('institute');
+const db = client.db('base-backend');
 export const productsCollection = db.collection<CourseType>('courses');
 
 export async function runDb() {
