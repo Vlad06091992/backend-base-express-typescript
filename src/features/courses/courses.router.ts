@@ -1,12 +1,5 @@
-import express, {Request, Response, Router} from "express";
-import {
-    CourseType,
-    RequestWithBody,
-    RequestWithParams,
-    RequestWithParamsAndBody,
-    RequestWithQuery,
-    RootDBType
-} from "../../types";
+import express, {Request, Response} from "express";
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery, RootDBType} from "../../types";
 import {HTTP_STATUSES} from "../../http_statuses/http_statuses";
 import {CourseCreateModel} from "../courses/model/CourseCreateModel";
 import {QueryCourseModel} from "../courses/model/QueryCourseModel";
@@ -14,22 +7,21 @@ import {CourseUpdateModel} from "../courses/model/CourseUpdateModel";
 import {CourseViewModel} from "../courses/model/CourseViewModel";
 import {URIParamsCourseIdModel} from "../courses/model//URIParamsCourseIdModel";
 import {getCourseViewModel} from "../../utils";
-import {coursesRepository} from "../../repositories/courses-repository";
-// import {coursesRepository} from "../../repositories/courses-in-memory-repository";
 import {body, validationResult} from "express-validator";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
+import {coursesService} from "../../domain/courses-service";
 
 const titleValidation = body('title').isLength({min: 3, max: 10}).withMessage('title should from 3 to 10 symbols')
 
-export const getCoursesRouter = (db: RootDBType) => {
+export const getCoursesRouter = (db: RootDBType) => { //презентационный слой
     const router = express.Router()
     router.get('/', async (req: RequestWithQuery<QueryCourseModel>, res: Response<CourseViewModel[]>) => {
-        let foundedCourses = await coursesRepository.findCourses(req.query.title) as any
+        let foundedCourses = await coursesService.findCourses(req.query.title) as any
         res.status(200).send(foundedCourses)
     })
 
     router.get('/:id', async (req: RequestWithParams<URIParamsCourseIdModel>, res: Response<CourseViewModel | number>) => {
-        const course = await coursesRepository.getCourseById(+req.params.id)
+        const course = await coursesService.getCourseById(+req.params.id)
         if (course) {
             res.send(course)
         } else {
@@ -39,30 +31,26 @@ export const getCoursesRouter = (db: RootDBType) => {
 
     router.post('/', titleValidation, inputValidationMiddleware, async (req: RequestWithBody<CourseCreateModel>, res: Response<CourseViewModel | number | any>) => {
         let data = req.body
-        const course = await coursesRepository.createCourse(data)
+        const course = await coursesService.createCourse(data)
         let out = getCourseViewModel(course)
         res.status(HTTP_STATUSES.CREATED_201).send(out)
     })
 
 
-    router.put('/:id', titleValidation, async (req: RequestWithParamsAndBody<URIParamsCourseIdModel, CourseUpdateModel>, res: Response<CourseViewModel | any>) => {
-        const result = validationResult(req);
-        if (result.isEmpty()) {
-            const isUpdated = await coursesRepository.updateCourse(req.body, +req.params.id) as any
-            if (isUpdated) {
-                res.sendStatus(204)
-                return
-            } else {
-                res.sendStatus(404)
-                return
-            }
+    router.put('/:id', titleValidation, inputValidationMiddleware, async (req: RequestWithParamsAndBody<URIParamsCourseIdModel, CourseUpdateModel>, res: Response<CourseViewModel | any>) => {
+        const isUpdated = await coursesService.updateCourse(+req.params.id, req.body) as any
+        if (isUpdated) {
+            res.sendStatus(204)
+            return
+        } else {
+            res.sendStatus(404)
+            return
         }
-        res.send({errors: result.array()});
     })
 
 
     router.delete('/:id', async (req: Request<URIParamsCourseIdModel>, res: Response<number>) => {
-        const isDeleted = await coursesRepository.deleteCourse(+req.params.id) as any
+        const isDeleted = await coursesService.deleteCourse(+req.params.id) as any
         if (isDeleted) {
             res.send(HTTP_STATUSES.NO_CONTENT_204)
         } else {

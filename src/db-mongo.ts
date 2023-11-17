@@ -1,13 +1,11 @@
 import dotenv from 'dotenv'
-
 import {MongoClient} from 'mongodb'
 import {CourseType} from "./types";
 
-
 dotenv.config()
 
-
-const URL= process.env.MONGO_URL
+// const URL= process.env.MONGO_URL
+const URL= 'mongodb://localhost:27017'
 
 console.log(URL)
 
@@ -17,9 +15,10 @@ if(!URL){
 
 export const client = new MongoClient(URL)
 
-// const db = client.db('base-backend');
-const db = client.db();
-export const productsCollection = db.collection<CourseType>('courses');
+const dbName = 'test-mongo-docker';
+export const db = client.db(dbName);
+// const db = client.db();
+export const coursesCollection = db.collection<CourseType>('courses');
 
 export async function runDb() {
     try {

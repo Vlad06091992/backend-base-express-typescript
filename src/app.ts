@@ -5,7 +5,7 @@ import {getUsersRouter} from "./features/users/users.router";
 import express, {NextFunction, Request, Response} from "express";
 import {db} from "./db";
 import bodyParser from "body-parser";
-import {coursesRepository} from "./repositories/courses-repository";
+import {coursesService} from "./domain/courses-service";
 
 let countRequest = 0
 let blablaMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -70,7 +70,8 @@ app.delete("/__test__/data", async (req: Request, res: Response) => {
     db.usersCoursesBinding = []
     // db.courses = []
     db.users = []
-    // await coursesRepository.deleteAllCourses()
+
+    await coursesService.deleteAllCourses()
     res.sendStatus(204)
 })
 

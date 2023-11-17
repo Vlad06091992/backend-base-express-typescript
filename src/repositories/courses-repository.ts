@@ -1,6 +1,6 @@
 import {getCourseViewModel} from "../utils";
 import {CourseType} from "../types";
-import {client, productsCollection} from "../db-mongo";
+import {client, coursesCollection} from "../db-mongo";
 import {CourseCreateModel} from "../features/courses/model/CourseCreateModel";
 
 export const coursesRepository = {
@@ -9,23 +9,22 @@ export const coursesRepository = {
         if (title) {
             filter = {"title": {$regex: "title"}}
         }
-        let result = await productsCollection.find(filter).toArray()
+        let result = await coursesCollection.find(filter).toArray()
         return result.map((el: any) => getCourseViewModel(el))
     },
-    async createCourse({title, studentsCount}: CourseCreateModel): Promise<CourseType> {
-        const course = {id: +new Date(), title, studentsCount}
-        await productsCollection.insertOne(course)
+    async createCourse(course: CourseType): Promise<CourseType> {
+        await coursesCollection.insertOne(course)
         return course
     },
     async getCourseById(id: number) {
-        const course: CourseType | null = await productsCollection.findOne({id})
+        const course: CourseType | null = await coursesCollection.findOne({id})
         if (course) {
             return (getCourseViewModel(course))
         }
         return null
     },
-    async updateCourse({title, studentsCount}: { title: string, studentsCount: number }, id: number) {
-        let result = await productsCollection.updateOne({id}, {
+    async updateCourse(id: number, {title, studentsCount}: { title: string, studentsCount: number }) {
+        let result = await coursesCollection.updateOne({id}, {
             $set: {
                 title,
                 studentsCount
@@ -35,11 +34,11 @@ export const coursesRepository = {
     },
 
     async deleteCourse(id: number) {
-        let result = await productsCollection.deleteOne({id})
+        let result = await coursesCollection.deleteOne({id})
         return result.deletedCount === 1
     },
     async deleteAllCourses() {
-        await client.db('institute').collection('courses').deleteMany({})
+        await client.db('test-mongo-docker').collection('courses').deleteMany({})
         return true
     }
 }
