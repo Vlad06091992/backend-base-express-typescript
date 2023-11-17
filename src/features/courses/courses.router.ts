@@ -7,7 +7,7 @@ import {CourseUpdateModel} from "../courses/model/CourseUpdateModel";
 import {CourseViewModel} from "../courses/model/CourseViewModel";
 import {URIParamsCourseIdModel} from "../courses/model//URIParamsCourseIdModel";
 import {getCourseViewModel} from "../../utils";
-import {body, validationResult} from "express-validator";
+import {body} from "express-validator";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 import {coursesService} from "../../domain/courses-service";
 

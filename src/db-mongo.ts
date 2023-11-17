@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import {MongoClient} from 'mongodb'
-import {CourseType} from "./types";
+import {CourseType, UserType} from "./types";
 
 dotenv.config()
 
@@ -15,10 +15,12 @@ if(!URL){
 
 export const client = new MongoClient(URL)
 
-const dbName = 'test-mongo-docker';
+// const dbName = 'test-mongo-docker';
+const dbName = 'test-mongo-docker-many-courses';
 export const db = client.db(dbName);
 // const db = client.db();
 export const coursesCollection = db.collection<CourseType>('courses');
+export const usersCollection = db.collection<UserType>('users');
 
 export async function runDb() {
     try {

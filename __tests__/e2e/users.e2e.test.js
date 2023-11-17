@@ -67,11 +67,10 @@ describe('test for /users', () => {
             const createResponse = await (0, supertest_1.default)(app_1.app)
                 .put(`${app_1.Routes.users}/${createdUser1.id}`)
                 .send(data);
-            expect(http_statuses_1.HTTP_STATUSES.CREATED_201);
-            expect(createResponse.body).toEqual({
-                id: expect.any(Number),
-                userName: data.userName,
-            });
+            expect(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+            const updatedUser = await (0, supertest_1.default)(app_1.app)
+                .get(`${app_1.Routes.users}/${createdUser1.id}`);
+            expect(updatedUser.body).toEqual({ id: expect.any(Number), userName: 'KOLYA' });
         }
     });
     let createdUser2 = null;
@@ -86,15 +85,14 @@ describe('test for /users', () => {
     });
     it('entity should be updated', async () => {
         if (createdUser2) {
-            const data = { userName: "KOLYA" };
+            const data = { userName: "Vlad" };
             const createResponse = await (0, supertest_1.default)(app_1.app)
                 .put(`${app_1.Routes.users}/${createdUser2.id}`)
                 .send(data);
-            expect(http_statuses_1.HTTP_STATUSES.CREATED_201);
-            expect(createResponse.body).toEqual({
-                id: expect.any(Number),
-                userName: data.userName,
-            });
+            expect(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+            const updatedUser = await (0, supertest_1.default)(app_1.app)
+                .get(`${app_1.Routes.users}/${createdUser2.id}`);
+            expect(updatedUser.body).toEqual({ id: expect.any(Number), userName: 'Vlad' });
         }
     });
     it('all entities should be deleted', async () => {

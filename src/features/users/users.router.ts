@@ -13,84 +13,62 @@ import {UserViewModel} from "../users/model/UserViewModel";
 import {QueryUserModel} from "../users/model/QueryUserModel";
 import {URIParamsUserIdModel} from "../users/model/URIParamsUserIdModel";
 import {UserUpdateModel} from "../users/model/UserUpdateModel";
+import {usersService} from "../../domain/users-service";
+import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
+import {body} from "express-validator";
+import {getUserViewModel} from "../../utils";
+
+const titleValidation = body('userName').isLength({min: 3, max: 10}).withMessage('title should from 3 to 10 symbols')
+
+export const mapEntityToViewModel = (dbEntity: UserType): UserViewModel => ({
+    id: dbEntity.id,
+    userName: dbEntity.userName
+})
 
 
-export const mapEntityToViewModel = (dbEntity:UserType):UserViewModel =>({id:dbEntity.id, userName:dbEntity.userName})
-
-
-
-
-
-export const getUsersRouter = (db:RootDBType) => {
+export const getUsersRouter = (db: RootDBType) => {
     const router = express.Router()
-
-
-    router.get('/', (req: RequestWithQuery<QueryUserModel>, res: Response<UserViewModel[]>) => {
-        const userName = req.query.userName
-        if (userName) {
-            if (typeof userName === "string") {
-                res.send(db.users.filter(el => el.userName.toLowerCase().indexOf(userName) > -1))
-            }
-        }
-        res.send(db.users.map(el=>mapEntityToViewModel(el)))
+    router.get('/', async (req: RequestWithQuery<QueryUserModel>, res: Response<UserViewModel[]>) => {
+        let foundedUsers = await usersService.findUsers(req.query.userName) as any
+        res.status(200).send(foundedUsers)
     })
 
-    router.get('/:id', (req: RequestWithParams<URIParamsUserIdModel>, res: Response<UserViewModel | number> ) => {
-        const id = req.params.id
-        const user = db.users.find(el => el.id === +id)
-        if (user) {
-            res.send(mapEntityToViewModel(user))
-
+    router.get('/:id', async (req: RequestWithParams<URIParamsUserIdModel>, res: Response<UserViewModel | number>) => {
+        const course = await usersService.getUserById(+req.params.id)
+        if (course) {
+            res.send(course)
         } else {
             res.send(HTTP_STATUSES.NOT_FOUND_404)
         }
     })
 
-    router.post('/', (req: RequestWithBody<UserCreateModel>, res: Response<UserViewModel>) => {
-        const userName = req.body.userName
-        if (userName) {
-            const user = {
-                userName: req.body.userName,
-                id: +new Date(),
-            }
-
-            db.users.push(user)
-            res.status(HTTP_STATUSES.CREATED_201).send(mapEntityToViewModel(user))
-
-        } else {
-            res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
-        }
+    router.post('/',titleValidation, inputValidationMiddleware, async (req: RequestWithBody<UserCreateModel>, res: Response<UserViewModel>) => {
+        let data = req.body
+        const user = await usersService.createUser(data)
+        let out = getUserViewModel(user)
+        res.status(HTTP_STATUSES.CREATED_201).send(out)
     })
 
 
-    router.put('/:id', (req: RequestWithParamsAndBody<URIParamsUserIdModel,UserUpdateModel>,  res: Response<UserViewModel | number>) => {
-        const id = req.params.id
-
-        const user = db.users.find((el: UserType) => el.id === +id)
-        if (user) {
-            user.userName = req.body.userName
-            res.status(HTTP_STATUSES.CREATED_201).send(mapEntityToViewModel(user))
+    router.put('/:id',titleValidation, inputValidationMiddleware, async (req: RequestWithParamsAndBody<URIParamsUserIdModel, UserUpdateModel>, res: Response<UserViewModel | number>) => {
+        const isUpdated = await usersService.updateUser(+req.params.id, req.body) as any
+        if (isUpdated) {
+            res.sendStatus(204)
+            return
         } else {
-            res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+            res.sendStatus(404)
+            return
         }
     })
 
-
-
-
-    router.delete('/:id', (req: RequestWithParams<URIParamsUserIdModel>, res: Response<number>) => {
-        const id = req.params.id
-        const indexItem = db.users.findIndex(el => el.id === +id)
-
-        if (indexItem > -1) {
-            db.users.splice(indexItem, 1)
+    router.delete('/:id', async (req: RequestWithParams<URIParamsUserIdModel>, res: Response<number>) => {
+        const isDeleted = await usersService.deleteUser(+req.params.id) as any
+        if (isDeleted) {
             res.send(HTTP_STATUSES.NO_CONTENT_204)
         } else {
             res.send(HTTP_STATUSES.NOT_FOUND_404)
         }
     })
-
     return router
-
 }
 

@@ -9,7 +9,7 @@ import {
 } from "../users-courses-bindings/model/UserCourseBindingsViewModel";
 
 const mapEntityToViewModel = (entity: UsersCourseBindingType, user: UserType, course: CourseType): UserCourseBindingsViewModel => {
-    return {userId:entity.userId,courseId:entity.courseId, courseTitle: course.title, userName: user.userName}
+    return {userId: entity.userId, courseId: entity.courseId, courseTitle: course.title, userName: user.userName}
 }
 
 
@@ -18,15 +18,12 @@ export const getUsersCoursesBindingsRouter = (db: RootDBType) => {
     router.get('/', (req, res) => {
 
         let usersBindningsCourses = db.usersCoursesBinding
-
         res
             .status(HTTP_STATUSES.OK_200)
             .send(usersBindningsCourses)
     })
 
     router.post('/', (req: RequestWithBody<UserCourseBindingsCreateModel>, res: Response<UserCourseBindingsViewModel | number>) => {
-
-
         const user = db.users.find(el => el.id === req.body.userId)
         const course = db.courses.find(el => el.id === req.body.courseId)
         const alreadyExistingBinding = db.usersCoursesBinding.find(el => el.userId === user?.id && el.courseId === course?.id)

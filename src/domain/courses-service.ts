@@ -16,7 +16,7 @@ class Course {
     }
 }
 
-export const coursesService = {
+export const coursesService = { //business(application) layer
      findCourses(title: string | null) {
         return coursesRepository.findCourses(title)
     },

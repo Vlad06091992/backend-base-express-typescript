@@ -3,7 +3,7 @@ import {CourseType} from "../types";
 import {client, coursesCollection} from "../db-mongo";
 import {CourseCreateModel} from "../features/courses/model/CourseCreateModel";
 
-export const coursesRepository = {
+export const coursesRepository = { // data access layer
     async findCourses(title: string | null) {
         let filter = {}
         if (title) {
