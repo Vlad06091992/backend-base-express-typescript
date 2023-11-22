@@ -8,6 +8,8 @@ import bodyParser from "body-parser";
 import {coursesService} from "./domain/courses-service";
 import {usersService} from "./domain/users-service";
 
+//TODO - сортировка
+
 let countRequest = 0
 let blablaMiddleware = (req: Request, res: Response, next: NextFunction) => {
     //@ts-ignore
