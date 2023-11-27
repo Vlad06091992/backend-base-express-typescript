@@ -1,0 +1,597 @@
+sort enitites
+
+//db.getCollection("courses").find({}).sort({'title':1}) // 1 - asc(по возрастанию)
+//db.getCollection("courses").find({}).sort({'title':-1}) // 1 - desc(по убыванию)
+db.getCollection("courses").find({}).sort({'title':-1, 'studentsCount': 1}) // title по убыванию, в случае одинаковых тайтл - studentsCount по возрастанию
+
+find entities
+
+//db.inventory.find({item:"canas"})
+//db.inventory.find({status:""})
+//db.inventory.find({item:"paper"})
+//db.inventory.find({qty:300})
+//db.inventory.find({status:{$in:["A","D"]}}) //по нескольким совпадениям
+//db.inventory.find({item:{$in:["notebook","paper","car","planner"]}}) //по нескольким совпадениям
+//db.inventory.find( { status: "A", qty: { $lt: 30 } } ) //несколько условий одновременно
+//db.inventory.find( { item: "canvas",tags:"steel"}) //несколько условий одновременно
+//db.inventory.find({ qty: { $gt: 100 } }) //больше чем(условие)
+//db.inventory.find({ qty: { $lt: 30 } }) //меньше чем(условие)
+//db.inventory.find({ qty: { $gte: 50 } }) //больше чем(условие) или равно
+//db.inventory.find({
+//    qty: { $gte: 50 },
+//    item: { $in: ["notebook", "paper", "car", "planner"] }
+//}) //по условиям двух полей (оператор И)
+
+//db.inventory.find({
+//    qty: { $gte: 50 },
+//    $or:[{item:{$in:["notebook","paper","car","planner"]}}]
+//    }) //по условиям двух полей (оператор ИЛИ)
+
+//db.inventory.find({
+//    $or: [
+//        { qty: { $lte: 75 } },
+//        { item: "notebook" },
+//        { item: "canvas" },
+//    ]
+//}) //по условиям двух полей (оператор ИЛИ)
+
+
+db.inventory.find({
+    $or: [
+        { qty: { $lte: 75 } },
+        {
+            $or: [
+                { item: "notebook" },
+                { item: "canvas" },
+            ]
+        }
+
+    ]
+}) //по условиям двух полей (оператор ИЛИ)
+
+
+
+db.inventory.find({
+    $or: [
+        { qty: { $lte: 75 } },
+        {item:{$in:['notebook',"canvas"]}}
+
+    ]
+}) //по условиям двух полей (оператор ИЛИ)
+
+counting entities
+
+//db.getCollection("courses").find({}).skip(90).limit(30)
+//db.getCollection("courses").count()
+db.getCollection("courses").count({title:'nodejs'}) //количество по фильтру
+
+template for pagination
+
+//db.getCollection("courses").find({}).skip(90).limit(30)
+//db.getCollection("courses").count()
+db.getCollection("courses").count({title:'nodejs'}) //количество по фильтру
+
+add many
+
+db.getCollection("courses").insertMany([
+  {
+    "title": "angular",
+    "studentsCount": 5344
+  },
+  {
+    "title": "angular",
+    "studentsCount": 5949
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 5922
+  },
+  {
+    "title": "angular",
+    "studentsCount": 4526
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 4289
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 3863
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 4113
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 5788
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 3800
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 3664
+  },
+  {
+    "title": "react",
+    "studentsCount": 4846
+  },
+  {
+    "title": "docker",
+    "studentsCount": 1391
+  },
+  {
+    "title": "docker",
+    "studentsCount": 4316
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 5504
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 4300
+  },
+  {
+    "title": "angular",
+    "studentsCount": 1138
+  },
+  {
+    "title": "angular",
+    "studentsCount": 4564
+  },
+  {
+    "title": "docker",
+    "studentsCount": 1714
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 3472
+  },
+  {
+    "title": "docker",
+    "studentsCount": 5257
+  },
+  {
+    "title": "docker",
+    "studentsCount": 5186
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 5956
+  },
+  {
+    "title": "docker",
+    "studentsCount": 4948
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 1636
+  },
+  {
+    "title": "docker",
+    "studentsCount": 5650
+  },
+  {
+    "title": "angular",
+    "studentsCount": 4521
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 2565
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 3475
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 5027
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 2404
+  },
+  {
+    "title": "angular",
+    "studentsCount": 3020
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 2425
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 2673
+  },
+  {
+    "title": "angular",
+    "studentsCount": 1880
+  },
+  {
+    "title": "angular",
+    "studentsCount": 3208
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 4924
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 2844
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 5545
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 2711
+  },
+  {
+    "title": "docker",
+    "studentsCount": 2690
+  },
+  {
+    "title": "angular",
+    "studentsCount": 2750
+  },
+  {
+    "title": "docker",
+    "studentsCount": 3048
+  },
+  {
+    "title": "docker",
+    "studentsCount": 1328
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 4665
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 3249
+  },
+  {
+    "title": "react",
+    "studentsCount": 4376
+  },
+  {
+    "title": "docker",
+    "studentsCount": 2822
+  },
+  {
+    "title": "angular",
+    "studentsCount": 1806
+  },
+  {
+    "title": "docker",
+    "studentsCount": 5122
+  },
+  {
+    "title": "angular",
+    "studentsCount": 5338
+  },
+  {
+    "title": "angular",
+    "studentsCount": 3968
+  },
+  {
+    "title": "angular",
+    "studentsCount": 3289
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 2062
+  },
+  {
+    "title": "react",
+    "studentsCount": 1169
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 2794
+  },
+  {
+    "title": "react",
+    "studentsCount": 4974
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 1691
+  },
+  {
+    "title": "docker",
+    "studentsCount": 2962
+  },
+  {
+    "title": "react",
+    "studentsCount": 2238
+  },
+  {
+    "title": "angular",
+    "studentsCount": 3251
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 3426
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 3977
+  },
+  {
+    "title": "react",
+    "studentsCount": 1483
+  },
+  {
+    "title": "angular",
+    "studentsCount": 3820
+  },
+  {
+    "title": "docker",
+    "studentsCount": 4320
+  },
+  {
+    "title": "angular",
+    "studentsCount": 5332
+  },
+  {
+    "title": "react",
+    "studentsCount": 3725
+  },
+  {
+    "title": "angular",
+    "studentsCount": 1817
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 1628
+  },
+  {
+    "title": "docker",
+    "studentsCount": 1504
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 4693
+  },
+  {
+    "title": "docker",
+    "studentsCount": 2883
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 3961
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 2222
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 1059
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 5423
+  },
+  {
+    "title": "angular",
+    "studentsCount": 2672
+  },
+  {
+    "title": "react",
+    "studentsCount": 1988
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 1410
+  },
+  {
+    "title": "react",
+    "studentsCount": 1877
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 4551
+  },
+  {
+    "title": "docker",
+    "studentsCount": 3560
+  },
+  {
+    "title": "react",
+    "studentsCount": 2004
+  },
+  {
+    "title": "react",
+    "studentsCount": 3974
+  },
+  {
+    "title": "angular",
+    "studentsCount": 1745
+  },
+  {
+    "title": "angular",
+    "studentsCount": 2359
+  },
+  {
+    "title": "angular",
+    "studentsCount": 1521
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 4308
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 2426
+  },
+  {
+    "title": "angular",
+    "studentsCount": 5174
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 1304
+  },
+  {
+    "title": "react",
+    "studentsCount": 2494
+  },
+  {
+    "title": "docker",
+    "studentsCount": 1313
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 3384
+  },
+  {
+    "title": "react",
+    "studentsCount": 3645
+  },
+  {
+    "title": "docker",
+    "studentsCount": 1358
+  },
+  {
+    "title": "mongodb",
+    "studentsCount": 3619
+  },
+  {
+    "title": "nodejs",
+    "studentsCount": 2254
+  },
+  {
+    "title": "react",
+    "studentsCount": 2638
+  },
+  {
+    "title": "angular",
+    "studentsCount": 4245
+  }
+])
+
+update entities
+
+//{ "_id" : { "$oid" : "65472619d80b9f2c05719264" }, "item" : "canvas", "qty" : 100, "tags" : [ "cotton" ], "size" : { "h" : 28, "w" : 35.5, "uom" : "cm" } }
+
+//db.inventory.updateOne({ _id: ObjectId("65472619d80b9f2c05719264") }, {
+//    $set: { item: "new Canvas",status:"XXX" }
+//})
+
+db.inventory.updateOne(
+   { item: "paper" },
+   {
+     $set: { "size.uom": "m2", status: "P" }, //обновить значение объекта по ключу
+     $currentDate: { lastModified: true }
+   }
+)
+
+delete entity
+
+db.inventory.deleteOne(
+   { item: "canvas3" },
+)
+
+delete entities
+
+db.inventory.deleteMany(
+   { item: "canvas" },
+)
+
+update entity
+
+//{ "_id" : { "$oid" : "65472619d80b9f2c05719264" }, "item" : "canvas", "qty" : 100, "tags" : [ "cotton" ], "size" : { "h" : 28, "w" : 35.5, "uom" : "cm" } }
+
+//db.inventory.updateOne({ _id: ObjectId("65472619d80b9f2c05719264") }, {
+//    $set: { item: "new Canvas",status:"XXX" }
+//})
+
+db.inventory.updateOne(
+   { item: "paper" },
+   {
+     $set: { "size.uom": "m2", status: "P" }, //обновить значение объекта по ключу
+     $currentDate: { lastModified: true }
+   }
+)
+
+
+find entity
+
+//db.inventory.find({item:"canas"})
+//db.inventory.find({status:""})
+//db.inventory.find({item:"paper"})
+//db.inventory.find({qty:300})
+//db.inventory.find({status:{$in:["A","D"]}}) //по нескольким совпадениям
+//db.inventory.find({item:{$in:["notebook","paper","car","planner"]}}) //по нескольким совпадениям
+//db.inventory.find( { status: "A", qty: { $lt: 30 } } ) //несколько условий одновременно
+//db.inventory.find( { item: "canvas",tags:"steel"}) //несколько условий одновременно
+//db.inventory.find({ qty: { $gt: 100 } }) //больше чем(условие)
+//db.inventory.find({ qty: { $lt: 30 } }) //меньше чем(условие)
+//db.inventory.find({ qty: { $gte: 50 } }) //больше чем(условие) или равно
+//db.inventory.find({
+//    qty: { $gte: 50 },
+//    item: { $in: ["notebook", "paper", "car", "planner"] }
+//}) //по условиям двух полей (оператор И)
+
+//db.inventory.find({
+//    qty: { $gte: 50 },
+//    $or:[{item:{$in:["notebook","paper","car","planner"]}}]
+//    }) //по условиям двух полей (оператор ИЛИ)
+
+//db.inventory.find({
+//    $or: [
+//        { qty: { $lte: 75 } },
+//        { item: "notebook" },
+//        { item: "canvas" },
+//    ]
+//}) //по условиям двух полей (оператор ИЛИ)
+
+
+db.inventory.find({
+    $or: [
+        { qty: { $lte: 75 } },
+        {
+            $or: [
+                { item: "notebook" },
+                { item: "canvas" },
+            ]
+        }
+
+    ]
+}) //по условиям двух полей (оператор ИЛИ)
+
+
+
+db.inventory.find({
+    $or: [
+        { qty: { $lte: 75 } },
+        {item:{$in:['notebook',"canvas"]}}
+
+    ]
+}) //по условиям двух полей (оператор ИЛИ)
+
+create entity
+
+db.inventory.insertOne(
+   { item: "canvas", qty: 300, tags: ["cotton"], size: { h: 28, w: 35.5, uom: "cm" } }
+)
+
+create entities
+
+db.inventory.insertMany([
+   { item: "journal", qty: 25, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
+   { item: "notebook", qty: 50, size: { h: 8.5, w: 11, uom: "in" }, status: "A" },
+   { item: "paper", qty: 100, size: { h: 8.5, w: 11, uom: "in" }, status: "D" },
+   { item: "planner", qty: 75, size: { h: 22.85, w: 30, uom: "cm" }, status: "D" },
+   { item: "postcard", qty: 45, size: { h: 10, w: 15.25, uom: "cm" }, status: "A" }
+]);
+
+get all entities
+
+db.inventory.find()
