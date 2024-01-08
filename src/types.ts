@@ -8,7 +8,10 @@ export type CourseType = {
 
 export type UserType = {
     login: string;
-    email:string
+    email:string;
+    passwordHash:string
+    passwordSalt:string
+    createdAt:string
 }
 
 export type UsersCourseBindingType = {

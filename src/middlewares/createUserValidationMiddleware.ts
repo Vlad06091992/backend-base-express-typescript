@@ -10,6 +10,16 @@ export const createUserValidationMiddleware = checkSchema({
             },
             errorMessage:"incorrect password length(3-20)"
         },
+        custom: {
+            options: async (emailOrLogin: string) => {
+                let res = await usersService.findUserByLoginOrEmail(emailOrLogin);
+                debugger
+                if (res) {
+                    return Promise.reject();
+                }
+            },
+            errorMessage: "this user already exist",
+        },
     },
     password: {
         isLength:{
@@ -30,9 +40,10 @@ export const createUserValidationMiddleware = checkSchema({
         isEmail:true,
         errorMessage:"incorrect email",
         custom: {
-            options: async (email: string) => {
-                let res = await usersService.findUserByEmail(email);
-                if (!res) {
+            options: async (emailOrLogin: string) => {
+                let res = await usersService.findUserByLoginOrEmail(emailOrLogin);
+                debugger
+                if (res) {
                     return Promise.reject();
                 }
             },

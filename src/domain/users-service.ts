@@ -5,6 +5,7 @@ import {usersRepository} from "../repositories/users-repository";
 import {UserCreateModel} from "../features/users/model/UserCreateModel";
 import {UserUpdateModel} from "../features/users/model/UserUpdateModel";
 import bcrypt from "bcrypt";
+import {WithId} from "mongodb";
 
 
     export const usersService = { // data access layer
@@ -12,12 +13,11 @@ import bcrypt from "bcrypt";
             return usersRepository.findUsers(title)
         },
         async createUser(user: UserCreateModel): Promise<UserType> {
-            const salt = await bcrypt.genSalt(10)
-            const hashedPassword = await bcrypt.hash(user.password,salt)
-            return   await usersRepository.createUser({...user,password:hashedPassword})
+          const{passwordHash,passwordSalt} = await this._generateHash(user.password)
+            return   await usersRepository.createUser({...user,passwordHash,passwordSalt,createdAt:new Date().toISOString()})
         },
-        async findUserByEmail(email: string | null)  {
-            let foundUser = await usersRepository.findUserByEmail(email)
+        async findUserByLoginOrEmail(emailOrLogin: string)  {
+            let foundUser:WithId<UserType> | undefined = await usersRepository.findUserByLoginOrEmail(emailOrLogin)
             if(foundUser)  return getUserViewModel(foundUser)
         },
         getUserById(id: string) {
@@ -34,5 +34,10 @@ import bcrypt from "bcrypt";
         async deleteAllUsers() {
             await client.db('test-mongo-docker').collection('users').deleteMany({})
             return true
+        },
+        async _generateHash(password:string) {
+            const passwordSalt = await bcrypt.genSalt(10)
+            const passwordHash = await bcrypt.hash(password,passwordSalt)
+            return{passwordSalt,passwordHash}
         }
     }

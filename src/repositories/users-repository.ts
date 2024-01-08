@@ -3,8 +3,7 @@ import {client, usersCollection} from "../db-mongo";
 import {getUserViewModel} from "../utils";
 import {UserUpdateModel} from "../features/users/model/UserUpdateModel";
 import {ObjectId} from "mongodb";
-import bcrypt from "bcrypt"
-import {UserCreateModel} from "../features/users/model/UserCreateModel";
+import {UserViewModel} from "../features/users/model/UserViewModel";
 
 export const usersRepository = { // data access layer
     async findUsers(title: string | null) {
@@ -15,16 +14,14 @@ export const usersRepository = { // data access layer
         let result = await usersCollection.find(filter).toArray()
         return result.map((el: any) => getUserViewModel(el))
     },
-    async findUserByEmail(email: string | null):Promise<any>  {
-        let filter = {}
-        if (email) {
-            filter = {"email": {$regex: "email"}}
-        }
-        let findedUser = await usersCollection.findOne(filter)
-        if(findedUser)  return getUserViewModel(findedUser)
-    },
-    async createUser(user: UserCreateModel): Promise<UserType> {
+    async findUserByLoginOrEmail(emailOrLogin:string)  {
+        let foundUser = await usersCollection.findOne({$or: [{email: emailOrLogin}, {login: emailOrLogin}]})
+        console.log(foundUser)
+        debugger
 
+        if(foundUser)  return foundUser
+    },
+    async createUser(user: UserType): Promise<UserType> {
         await usersCollection.insertOne(user)
         return user
     },
