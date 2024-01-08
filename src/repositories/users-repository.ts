@@ -4,6 +4,7 @@ import {getUserViewModel} from "../utils";
 import {UserUpdateModel} from "../features/users/model/UserUpdateModel";
 import {ObjectId} from "mongodb";
 import bcrypt from "bcrypt"
+import {UserCreateModel} from "../features/users/model/UserCreateModel";
 
 export const usersRepository = { // data access layer
     async findUsers(title: string | null) {
@@ -22,7 +23,7 @@ export const usersRepository = { // data access layer
         let findedUser = await usersCollection.findOne(filter)
         if(findedUser)  return getUserViewModel(findedUser)
     },
-    async createUser(user: UserType): Promise<UserType> {
+    async createUser(user: UserCreateModel): Promise<UserType> {
 
         await usersCollection.insertOne(user)
         return user

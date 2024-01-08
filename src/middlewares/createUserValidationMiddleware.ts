@@ -1,6 +1,5 @@
-import {NextFunction, Request, Response} from "express";
-import {body, check, checkSchema, CustomValidator, validationResult} from "express-validator";
-import {MinMaxOptions} from "express-validator/src/options";
+import {checkSchema} from "express-validator";
+import {usersService} from "../domain/users-service";
 
 export const createUserValidationMiddleware = checkSchema({
     login: {
@@ -11,18 +10,6 @@ export const createUserValidationMiddleware = checkSchema({
             },
             errorMessage:"incorrect password length(3-20)"
         },
-        matches:{
-            options: /^(?=.*[A-Z])(?=.*\d).*$/,
-            errorMessage:"The string lacks at least one uppercase letter or digit"
-
-        }
-        //     custom:((value:string) => {
-    // return User.findUserByEmail(value).then(user => {
-    //     if (user) {
-    //         return Promise.reject('E-mail already in use');
-    //     }
-    // });
-    // })
     },
     password: {
         isLength:{
@@ -32,10 +19,24 @@ export const createUserValidationMiddleware = checkSchema({
             },
             errorMessage:"incorrect password length(3-20"
         },
+        matches:{
+            options: /^(?=.*[A-Z])(?=.*\d).*$/,
+            errorMessage:"The string lacks at least one uppercase letter or digit"
+
+        }
 
     },
     email:{
         isEmail:true,
-        errorMessage:"incorrect email"
+        errorMessage:"incorrect email",
+        custom: {
+            options: async (email: string) => {
+                let res = await usersService.findUserByEmail(email);
+                if (!res) {
+                    return Promise.reject();
+                }
+            },
+            errorMessage: "this user already exist",
+        },
     }
 });
