@@ -2,6 +2,7 @@ import {UserType} from "../types";
 import {client, usersCollection} from "../db-mongo";
 import {getUserViewModel} from "../utils";
 import {UserUpdateModel} from "../features/users/model/UserUpdateModel";
+import {ObjectId} from "mongodb";
 
 export const usersRepository = { // data access layer
     async findUsers(title: string | null) {
@@ -12,12 +13,20 @@ export const usersRepository = { // data access layer
         let result = await usersCollection.find(filter).toArray()
         return result.map((el: any) => getUserViewModel(el))
     },
+    async findUserByEmail(email: string | null):Promise<any>  {
+        let filter = {}
+        if (email) {
+            filter = {"email": {$regex: "email"}}
+        }
+        let findedUser = await usersCollection.findOne(filter)
+        if(findedUser)  return getUserViewModel(findedUser)
+    },
     async createUser(user: UserType): Promise<UserType> {
         await usersCollection.insertOne(user)
         return user
     },
-    async getUserById(id: number) {
-        const user: UserType | null = await usersCollection.findOne({id})
+    async getUserById(id: string) {
+        const user = await usersCollection.findOne({_id: new ObjectId(id)})
         if (user) {
             return (getUserViewModel(user))
         }
@@ -39,3 +48,4 @@ export const usersRepository = { // data access layer
         return true
     }
 }
+

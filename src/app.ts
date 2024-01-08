@@ -58,6 +58,12 @@ app.get("/test", blablaMiddleware, (req: Request, res: Response) => {
 
 })
 
+
+app.get("/", (req: Request, res: Response) => {
+    debugger
+    res.send(`hello, it's my training backend project :)` )
+})
+
 app.get("/user", (req: Request, res: Response) => {
     //@ts-ignore
     const blabla = req.blabla

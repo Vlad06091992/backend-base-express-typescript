@@ -7,8 +7,8 @@ export type CourseType = {
 }
 
 export type UserType = {
-    id: number;
-    userName: string;
+    login: string;
+    email:string
 }
 
 export type UsersCourseBindingType = {

@@ -17,13 +17,14 @@ import {usersService} from "../../domain/users-service";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 import {body} from "express-validator";
 import {getUserViewModel} from "../../utils";
+import {createUserValidationMiddleware} from "../../middlewares/createUserValidationMiddleware";
 
 const titleValidation = body('userName').isLength({min: 3, max: 10}).withMessage('title should from 3 to 10 symbols')
 
-export const mapEntityToViewModel = (dbEntity: UserType): UserViewModel => ({
-    id: dbEntity.id,
-    userName: dbEntity.userName
-})
+// export const mapEntityToViewModel = (dbEntity: UserType): UserViewModel => ({
+//     id: dbEntity.id,
+//     login: dbEntity.userName
+// })
 
 
 export const getUsersRouter = (db: RootDBType) => {
@@ -34,17 +35,19 @@ export const getUsersRouter = (db: RootDBType) => {
     })
 
     router.get('/:id', async (req: RequestWithParams<URIParamsUserIdModel>, res: Response<UserViewModel | number>) => {
-        const course = await usersService.getUserById(+req.params.id)
-        if (course) {
-            res.send(course)
+        const user = await usersService.getUserById(req.params.id)
+        if (user) {
+            res.send(user)
         } else {
             res.send(HTTP_STATUSES.NOT_FOUND_404)
         }
     })
 
-    router.post('/',titleValidation, inputValidationMiddleware, async (req: RequestWithBody<UserCreateModel>, res: Response<UserViewModel>) => {
+    router.post('/',createUserValidationMiddleware, inputValidationMiddleware, async (req: RequestWithBody<UserCreateModel>, res: Response<UserViewModel>) => {
         let data = req.body
+        debugger
         const user = await usersService.createUser(data)
+        //@ts-ignore
         let out = getUserViewModel(user)
         res.status(HTTP_STATUSES.CREATED_201).send(out)
     })

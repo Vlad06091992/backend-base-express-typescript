@@ -5,24 +5,16 @@ import {usersRepository} from "../repositories/users-repository";
 import {UserCreateModel} from "../features/users/model/UserCreateModel";
 import {UserUpdateModel} from "../features/users/model/UserUpdateModel";
 
-class User {
-    userName: string
-    id: number
-
-    constructor(userName: string) {
-        this.userName = userName,
-            this.id = +new Date()
-    }}
-
     export const usersService = { // data access layer
         findUsers(title: string | null) {
             return usersRepository.findUsers(title)
         },
-        createUser({userName}: UserCreateModel): Promise<UserType> {
-            const user = new User(userName)
-            return usersRepository.createUser(user)
+        async createUser(user: UserCreateModel): Promise<UserType> {
+            const createdUser = await usersRepository.createUser(user)
+            debugger
+            return createdUser
         },
-        getUserById(id: number) {
+        getUserById(id: string) {
             return usersRepository.getUserById(id)
         },
         async updateUser(id: number, data: UserUpdateModel) {
