@@ -10,6 +10,7 @@
     "dev": "nodemon --inspect dist/index.js"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/jest": "^29.5.5",
     "@types/supertest": "^2.0.14",
     "bcrypt": "^5.1.1",
