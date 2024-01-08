@@ -13,7 +13,6 @@ export const createUserValidationMiddleware = checkSchema({
         custom: {
             options: async (emailOrLogin: string) => {
                 let res = await usersService.findUserByLoginOrEmail(emailOrLogin);
-                debugger
                 if (res) {
                     return Promise.reject();
                 }
@@ -42,7 +41,6 @@ export const createUserValidationMiddleware = checkSchema({
         custom: {
             options: async (emailOrLogin: string) => {
                 let res = await usersService.findUserByLoginOrEmail(emailOrLogin);
-                debugger
                 if (res) {
                     return Promise.reject();
                 }

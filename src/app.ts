@@ -7,6 +7,7 @@ import {db} from "./db";
 import bodyParser from "body-parser";
 import {coursesService} from "./domain/courses-service";
 import {usersService} from "./domain/users-service";
+import {authRouter} from "./features/auth/auth.router";
 
 //TODO - сортировка
 
@@ -40,6 +41,7 @@ export const Routes = {
     courses: '/courses',
     users: '/users',
     usersCoursesBindings: '/users-courses-bindings',
+    auth:'/auth'
 }
 
 app.use(bodyParser())
@@ -47,6 +49,7 @@ app.use(bodyParser())
 // app.use(authGuardMiddleware)
 // app.use(requestCountMiddleware)
 app.use(Routes.courses, getCoursesRouter(db))
+app.use(Routes.auth, authRouter)
 app.use(Routes.users, getUsersRouter(db))
 app.use(Routes.usersCoursesBindings, getUsersCoursesBindingsRouter(db))
 
@@ -60,7 +63,6 @@ app.get("/test", blablaMiddleware, (req: Request, res: Response) => {
 
 
 app.get("/", (req: Request, res: Response) => {
-    debugger
     res.send(`hello, it's my training backend project :)` )
 })
 

@@ -45,7 +45,6 @@ export const getUsersRouter = (db: RootDBType) => {
 
     router.post('/',createUserValidationMiddleware, inputValidationMiddleware, async (req: RequestWithBody<UserCreateModel>, res: Response<UserViewModel>) => {
         let data = req.body
-        debugger
         const user = await usersService.createUser(data)
         //@ts-ignore
         let out = getUserViewModel(user)

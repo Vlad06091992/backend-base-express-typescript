@@ -16,9 +16,6 @@ export const usersRepository = { // data access layer
     },
     async findUserByLoginOrEmail(emailOrLogin:string)  {
         let foundUser = await usersCollection.findOne({$or: [{email: emailOrLogin}, {login: emailOrLogin}]})
-        console.log(foundUser)
-        debugger
-
         if(foundUser)  return foundUser
     },
     async createUser(user: UserType): Promise<UserType> {
