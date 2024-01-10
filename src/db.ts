@@ -1,4 +1,4 @@
-import {RootDBType} from "./types";
+import {RootDBType} from "src/types/types";
 
 export const db: RootDBType = {
     courses:

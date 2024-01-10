@@ -7,13 +7,13 @@ import {
     RequestWithQuery,
     RootDBType,
     UserType
-} from "../../../src/types";
+} from "src/types/types";
 import {UserCreateModel} from "../users/model/UserCreateModel";
 import {UserViewModel} from "../users/model/UserViewModel";
 import {QueryUserModel} from "../users/model/QueryUserModel";
 import {URIParamsUserIdModel} from "../users/model/URIParamsUserIdModel";
 import {UserUpdateModel} from "../users/model/UserUpdateModel";
-import {usersService} from "../../domain/users-service";
+import {usersService} from "../../services/users-service";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
 import {body} from "express-validator";
 import {getUserViewModel} from "../../utils";

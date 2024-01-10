@@ -5,9 +5,10 @@ import {getUsersRouter} from "./features/users/users.router";
 import express, {NextFunction, Request, Response} from "express";
 import {db} from "./db";
 import bodyParser from "body-parser";
-import {coursesService} from "./domain/courses-service";
-import {usersService} from "./domain/users-service";
+import {coursesService} from "./services/courses-service";
+import {usersService} from "./services/users-service";
 import {authRouter} from "./features/auth/auth.router";
+import {getFeedbackRouter} from "./features/comments/feedback.router";
 
 //TODO - сортировка
 
@@ -41,7 +42,8 @@ export const Routes = {
     courses: '/courses',
     users: '/users',
     usersCoursesBindings: '/users-courses-bindings',
-    auth:'/auth'
+    auth:'/auth',
+    feedback:'/feedbacks'
 }
 
 app.use(bodyParser())
@@ -49,6 +51,7 @@ app.use(bodyParser())
 // app.use(authGuardMiddleware)
 // app.use(requestCountMiddleware)
 app.use(Routes.courses, getCoursesRouter(db))
+app.use(Routes.feedback, getFeedbackRouter())
 app.use(Routes.auth, authRouter)
 app.use(Routes.users, getUsersRouter(db))
 app.use(Routes.usersCoursesBindings, getUsersCoursesBindingsRouter(db))

@@ -1,7 +1,7 @@
 import request from "supertest";
 import {app, Routes} from "../../src/app";
 import {HTTP_STATUSES} from "../../src/http_statuses/http_statuses";
-import {UserType} from "../../src/types";
+import {UserType} from "src/types/types";
 import {UserCreateModel} from "../../src/features/users/model/UserCreateModel";
 import {UserUpdateModel} from "../../src/features/users/model/UserUpdateModel";
 import {userTestManager} from "../utils/userTestManager";

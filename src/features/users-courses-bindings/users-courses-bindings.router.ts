@@ -1,5 +1,5 @@
 import express, {Request, Response, Router} from "express";
-import {CourseType, RequestWithBody, RootDBType, UsersCourseBindingType, UserType} from "../../types";
+import {CourseType, RequestWithBody, RootDBType, UsersCourseBindingType, UserType} from "src/types/types";
 import {HTTP_STATUSES} from "../../http_statuses/http_statuses";
 import {
     UserCourseBindingsCreateModel

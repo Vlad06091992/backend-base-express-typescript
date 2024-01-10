@@ -1,4 +1,4 @@
-import {UserType} from "../types";
+import {UserType} from "src/types/types";
 import {client, usersCollection} from "../db-mongo";
 import {getUserViewModel} from "../utils";
 import {UserUpdateModel} from "../features/users/model/UserUpdateModel";

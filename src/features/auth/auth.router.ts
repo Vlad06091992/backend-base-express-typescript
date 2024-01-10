@@ -1,6 +1,6 @@
 import express, {Router} from "express";
-import {usersService} from "../../domain/users-service";
-import {jwtService} from "../../domain/jwt-service";
+import {usersService} from "../../services/users-service";
+import {jwtService} from "../../services/jwt-service";
 import {HTTP_STATUSES} from "../../http_statuses/http_statuses";
 
 export const authRouter = Router({})

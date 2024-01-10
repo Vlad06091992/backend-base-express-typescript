@@ -1,4 +1,4 @@
-import {CourseType, UserType} from "../src/types";
+import {CourseType, UserType} from "src/types/types";
 import {CourseViewModel} from "./features/courses/model/CourseViewModel";
 import {UserViewModel} from "./features/users/model/UserViewModel";
 import {WithId} from "mongodb";

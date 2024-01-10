@@ -1,4 +1,4 @@
-import {UserType} from "../types";
+import {UserType} from "src/types/types";
 import {client, usersCollection} from "../db-mongo";
 import {getUserViewModel} from "../utils";
 import {usersRepository} from "../repositories/users-repository";
@@ -42,14 +42,11 @@ export const usersService = { // data access layer
         return true
     },
     async _generateHash(password: string, salt: string) {
-
         const passwordHash = await bcrypt.hash(password, salt)
         return passwordHash
     },
     async checkCredentials(loginOrEmail: string, password: string) {
         const user = await this.findUserByLoginOrEmail(loginOrEmail)
-        debugger
-
         if (!user) return false
 
         const passwordHash = await this._generateHash(password,user.passwordSalt)

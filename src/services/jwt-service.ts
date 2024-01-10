@@ -1,4 +1,4 @@
-import {UserType} from "../types";
+import {UserType} from "src/types/types";
 import jwt from "jsonwebtoken"
 import {WithId} from "mongodb";
 
@@ -10,5 +10,13 @@ export const jwtService = {
     createJWT(user:WithId<UserType>){
         const token = jwt.sign({userId:user._id},settings.JWT_SECRET,{expiresIn:'1h'})
         return token
+    },
+    getUserIdByToken(token:string){
+        try {
+             const res:any =  jwt.verify(token,settings.JWT_SECRET)
+            return res.userId
+        } catch (e){
+            debugger
+        }
     }
 }

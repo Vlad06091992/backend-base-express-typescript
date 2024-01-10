@@ -1,5 +1,5 @@
 import express, {Request, Response} from "express";
-import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery, RootDBType} from "../../types";
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery, RootDBType} from "src/types/types";
 import {HTTP_STATUSES} from "../../http_statuses/http_statuses";
 import {CourseCreateModel} from "../courses/model/CourseCreateModel";
 import {QueryCourseModel} from "../courses/model/QueryCourseModel";
@@ -9,7 +9,7 @@ import {URIParamsCourseIdModel} from "../courses/model//URIParamsCourseIdModel";
 import {getCourseViewModel} from "../../utils";
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../../middlewares/input-validation-middleware";
-import {coursesService} from "../../domain/courses-service";
+import {coursesService} from "../../services/courses-service";
 
 const titleValidation = body('title').isLength({min: 3, max: 10}).withMessage('title should from 3 to 10 symbols')
 

@@ -1,5 +1,5 @@
 import {checkSchema} from "express-validator";
-import {usersService} from "../domain/users-service";
+import {usersService} from "../services/users-service";
 
 export const createUserValidationMiddleware = checkSchema({
     login: {

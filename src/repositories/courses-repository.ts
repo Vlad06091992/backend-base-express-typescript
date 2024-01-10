@@ -1,5 +1,5 @@
 import {getCourseViewModel} from "../utils";
-import {CourseType} from "../types";
+import {CourseType} from "src/types/types";
 import {client, coursesCollection} from "../db-mongo";
 import {CourseCreateModel} from "../features/courses/model/CourseCreateModel";
 

@@ -1,10 +1,15 @@
 import {Request, Response, Router} from "express";
 
 export type CourseType = {
-    id: number;
     title: string;
     studentsCount: number;
 }
+
+export type CommentType = {
+    userId: string;
+    comment: string;
+}
+
 
 export type UserType = {
     login: string;
