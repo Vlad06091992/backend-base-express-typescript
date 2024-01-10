@@ -9,6 +9,7 @@ import {coursesService} from "./services/courses-service";
 import {usersService} from "./services/users-service";
 import {authRouter} from "./features/auth/auth.router";
 import {getFeedbackRouter} from "./features/comments/feedback.router";
+import {emailRouter} from "./routes/email-router";
 
 //TODO - сортировка
 
@@ -43,7 +44,8 @@ export const Routes = {
     users: '/users',
     usersCoursesBindings: '/users-courses-bindings',
     auth:'/auth',
-    feedback:'/feedbacks'
+    feedback:'/feedbacks',
+    email:'/email'
 }
 
 app.use(bodyParser())
@@ -53,6 +55,7 @@ app.use(bodyParser())
 app.use(Routes.courses, getCoursesRouter(db))
 app.use(Routes.feedback, getFeedbackRouter())
 app.use(Routes.auth, authRouter)
+app.use(Routes.email, emailRouter)
 app.use(Routes.users, getUsersRouter(db))
 app.use(Routes.usersCoursesBindings, getUsersCoursesBindingsRouter(db))
 
