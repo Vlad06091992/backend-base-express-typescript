@@ -1,14 +1,14 @@
 import {checkSchema} from "express-validator";
 import {usersService} from "../services/users-service";
 
-export const createUserValidationMiddleware = checkSchema({
+export const createUserValidationMiddleware =  checkSchema({
     login: {
         isLength:{
             options:{
                 min:3,
                 max:20,
             },
-            errorMessage:"incorrect password length(3-20)"
+            errorMessage:"incorrect login length(2-20)"
         },
         custom: {
             options: async (emailOrLogin: string) => {
@@ -26,7 +26,7 @@ export const createUserValidationMiddleware = checkSchema({
                 min:3,
                 max:20,
             },
-            errorMessage:"incorrect password length(3-20"
+            errorMessage:"incorrect password length(2-20)"
         },
         matches:{
             options: /^(?=.*[A-Z])(?=.*\d).*$/,

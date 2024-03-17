@@ -1,8 +1,8 @@
-import {UserType} from "src/types/types";
+import {UserType} from "../types/types";
 import {client, usersCollection} from "../db-mongo";
 import {getUserViewModel} from "../utils";
 import {UserUpdateModel} from "../features/users/model/UserUpdateModel";
-import {ObjectId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 import {UserViewModel} from "../features/users/model/UserViewModel";
 
 export const usersRepository = { // data access layer
@@ -12,15 +12,20 @@ export const usersRepository = { // data access layer
             filter = {"title": {$regex: "title"}}
         }
         let result = await usersCollection.find(filter).toArray()
+        debugger
         return result.map((el: any) => getUserViewModel(el))
     },
     async findUserByLoginOrEmail(emailOrLogin:string)  {
-        let foundUser = await usersCollection.findOne({$or: [{email: emailOrLogin}, {login: emailOrLogin}]})
+        let foundUser = await usersCollection.findOne({$or: [{"accountData.email": emailOrLogin}, {"accountData.userName": emailOrLogin}]})
         if(foundUser)  return foundUser
     },
-    async createUser(user: UserType): Promise<UserType> {
-        await usersCollection.insertOne(user)
-        return user
+    async findUserByConfirmationCode(emailConfirmationCode: string)  {
+        let foundUser = await usersCollection.findOne({'emailConfirmation.confirmationCode':emailConfirmationCode})
+        if(foundUser)  return foundUser
+    },
+    async createUser(user: UserType): Promise<WithId<UserType>> {
+        const insertedUser = await usersCollection.insertOne(user)
+        return {...user, _id:insertedUser.insertedId}
     },
     async getUserById(id: string) {
         const user = await usersCollection.findOne({_id: new ObjectId(id)})
@@ -35,6 +40,14 @@ export const usersRepository = { // data access layer
         })
         return result.matchedCount === 1
     },
+
+    async updateConfirmation(_id: object) {
+        let result = await usersCollection.updateOne({_id}, {
+            $set:  {'emailConfirmation.isConfirmed':true}
+        })
+        return result.matchedCount === 1
+    },
+
 
     async deleteUser(id: number) {
         let result = await usersCollection.deleteOne({id})

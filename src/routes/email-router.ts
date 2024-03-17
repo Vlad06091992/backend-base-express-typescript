@@ -6,8 +6,7 @@ import {emailAdapter} from "../adapters/email-adapter";
 export const emailRouter = Router({})
 
 emailRouter.post('/send', async (req, res) => {
-    await emailAdapter.sendEmail('Smirnov06091992@yandex.ru','with adapter',
-        '<h1>Hello!</h1>','test adapter')
+    await emailAdapter.sendEmail({} as any)
 
 
 

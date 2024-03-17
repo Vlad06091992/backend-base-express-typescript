@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import {MongoClient} from 'mongodb'
-import {CommentType, CourseType, UserType} from "src/types/types";
+import {CommentType, CourseType, UserType} from "./types/types";
 
 dotenv.config()
 
@@ -21,6 +21,9 @@ export const db = client.db(dbName);
 // const db = client.db();
 export const coursesCollection = db.collection<CourseType>('courses');
 export const usersCollection = db.collection<UserType>('users');
+
+console.log(usersCollection.find().toArray().then((res)=>{
+    console.log(res)}))
 export const feadbackCollection = db.collection<CommentType>('comments');
 
 export async function runDb() {

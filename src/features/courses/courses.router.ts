@@ -16,6 +16,7 @@ const titleValidation = body('title').isLength({min: 3, max: 10}).withMessage('t
 export const getCoursesRouter = (db: RootDBType) => { //презентационный слой
     const router = express.Router()
     router.get('/', async (req: RequestWithQuery<QueryCourseModel>, res: Response<CourseViewModel[]>) => {
+        debugger
         let foundedCourses = await coursesService.findCourses(req.query.title) as any
         res.status(200).send(foundedCourses)
     })
@@ -30,6 +31,7 @@ export const getCoursesRouter = (db: RootDBType) => { //презентацион
     })
 
     router.post('/', titleValidation, inputValidationMiddleware, async (req: RequestWithBody<CourseCreateModel>, res: Response<CourseViewModel | number | any>) => {
+        debugger
         let data = req.body
         const course = await coursesService.createCourse(data)
         let out = getCourseViewModel(course)

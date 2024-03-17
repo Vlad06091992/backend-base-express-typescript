@@ -7,7 +7,7 @@ import {
     RequestWithQuery,
     RootDBType,
     UserType
-} from "src/types/types";
+} from "../../types/types";
 import {UserCreateModel} from "../users/model/UserCreateModel";
 import {UserViewModel} from "../users/model/UserViewModel";
 import {QueryUserModel} from "../users/model/QueryUserModel";
@@ -18,6 +18,8 @@ import {inputValidationMiddleware} from "../../middlewares/input-validation-midd
 import {body} from "express-validator";
 import {getUserViewModel} from "../../utils";
 import {createUserValidationMiddleware} from "../../middlewares/createUserValidationMiddleware";
+import {authService} from "../../services/autth-service";
+import {WithId} from "mongodb";
 
 const titleValidation = body('userName').isLength({min: 3, max: 10}).withMessage('title should from 3 to 10 symbols')
 
@@ -45,10 +47,8 @@ export const getUsersRouter = (db: RootDBType) => {
 
     router.post('/',createUserValidationMiddleware, inputValidationMiddleware, async (req: RequestWithBody<UserCreateModel>, res: Response<UserViewModel>) => {
         let data = req.body
-        const user = await usersService.createUser(data)
-        //@ts-ignore
-        let out = getUserViewModel(user)
-        res.status(HTTP_STATUSES.CREATED_201).send(out)
+        const user = await authService.createUser(data)
+        res.status(HTTP_STATUSES.CREATED_201).send(user!)
     })
 
 

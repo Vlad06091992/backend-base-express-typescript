@@ -1,4 +1,4 @@
-import {CourseType} from "src/types/types";
+import {CourseType} from "../types/types";
 import {CourseCreateModel} from "../features/courses/model/CourseCreateModel";
 import {coursesRepository} from "../repositories/courses-repository";
 import {CourseUpdateModel} from "../features/courses/model/CourseUpdateModel";

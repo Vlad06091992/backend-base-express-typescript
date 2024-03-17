@@ -1,5 +1,6 @@
 import {Request, Response, Router} from "express";
 
+
 export type CourseType = {
     title: string;
     studentsCount: number;
@@ -12,11 +13,19 @@ export type CommentType = {
 
 
 export type UserType = {
-    login: string;
-    email:string;
-    passwordHash:string
-    passwordSalt:string
-    createdAt:string
+    _id?:object
+    accountData:{
+        userName: string;
+        email:string;
+        passwordHash:string
+        // passwordSalt:string
+        createdAt:string
+    }
+    emailConfirmation:{
+        confirmationCode: string,
+        expirationDate:Date,
+        isConfirmed:boolean
+    }
 }
 
 export type UsersCourseBindingType = {
